@@ -51,9 +51,9 @@ in
       export RUSTUP_HOME="$HOME/.rustup"
 
       if [ "$(whoami)" = "${adminUser}" ]; then
-        export GEMINI_API_KEY="$(cat /run/secrets/api_keys/gemini)"
-        export ANTHROPIC_API_KEY="$(cat /run/secrets/api_keys/anthropic)"
-        export GOOGLE_CLOUD_PROJECT="$(cat /run/secrets/api_keys/google_cloud)"
+        export GEMINI_API_KEY="$(cat /run/secrets/api-keys/gemini)"
+        export ANTHROPIC_API_KEY="$(cat /run/secrets/api-keys/anthropic)"
+        export GOOGLE_CLOUD_PROJECT="$(cat /run/secrets/api-keys/google_cloud)"
       fi
     '';
 
