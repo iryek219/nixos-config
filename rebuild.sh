@@ -6,6 +6,7 @@ if [ $# -lt 1 ]; then
   echo "Please specify a host:"
   echo "  p-wsl"
   echo "  oci-arm"
+  echo "  h-tuf"
   echo "  h-pc"
   echo
   echo "Usage: $0 <host>"

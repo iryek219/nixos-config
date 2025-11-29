@@ -53,6 +53,13 @@
           modules = [];
         };
         
+        h-tuf = mkSystem {
+          hostname = "h-tuf";
+          system = "x86_64-linux";
+          hmUser = "hwan";
+          modules = [];
+        };
+
         h-pc = mkSystem {
           hostname = "h-pc";
           system = "x86_64-linux";
