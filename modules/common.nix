@@ -43,9 +43,9 @@ in
       ];
     };
 
-    networking.networkmanager.enable = true;
-
     environment.sessionVariables.LD_LIBRARY_PATH = inputs.nixpkgs.lib.makeLibraryPath uniqueLibs;
+
+    networking.networkmanager.enable = true;
 
     i18n.defaultLocale = "ko_KR.UTF-8";
     i18n.supportedLocales = [
@@ -56,6 +56,7 @@ in
     environment.systemPackages = with pkgs; [
       tree 
       vim 
+      unzip
       wget 
       git gh 
       uv
