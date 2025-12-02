@@ -65,11 +65,10 @@
       StrictHostKeyChecking accept-new
   '';
 
-  home.file.".config/exercism/user.json".text = ''
-    {
-      "apibaseurl": "https://api.exercism.org/v1",
-      "token": "$(cat ${config.sops.secrets.exercism-token.path})",
-      "workspace": "/home/hwan/learn/Exercism"
-    }
-  '';
+  home.file.".config/exercism/user.json".text =
+   builtins.toJSON {
+      apibaseurl = "https://api.exercism.org/v1";
+      token = builtins.readFile config.sops.secrets.exercism-token.path;
+      workspace = "/home/hwan/learn/Exercism";
+    };
 }
