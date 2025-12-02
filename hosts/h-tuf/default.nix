@@ -31,6 +31,9 @@
     google-chrome
     zoom-us
     kdePackages.okular
+    dejavu_fonts
+    noto-fonts
+    noto-fonts-cjk-sans
   ];
 
   i18n.extraLocaleSettings = {
