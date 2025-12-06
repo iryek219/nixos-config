@@ -27,10 +27,11 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    anki
     gparted
     google-chrome
-    zoom-us
     kdePackages.okular
+    zoom-us
     dejavu_fonts
     noto-fonts
     noto-fonts-cjk-sans

@@ -54,37 +54,31 @@ in
     ];
 
     environment.systemPackages = with pkgs; [
-      tree 
-      vim 
+      tree
+      vim
       unzip
-      wget 
-      git gh 
-      uv
-      rustup 
-      gcc 
-      pkg-config cmake
-      openssl openssl.dev 
-      zlib zlib.dev 
+      wget
+      git gh
+      gcc
+      clang
+      gnumake
+      cmake
+      pkg-config
+      openssl openssl.dev
       sqlite sqlite.dev
+      zlib zlib.dev
+      ffmpeg-full
+      yt-dlp
     ];
 
     environment.variables = {
       EDITOR = "vim";
-      GEMINI_MODEL="gemini-2.5-pro";
     };
 
     environment.interactiveShellInit = ''
       [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
       [ -d "$HOME/.cargo/bin" ] && PATH="$HOME/.cargo/bin:$PATH"
       export PATH
-      export CARGO_HOME="$HOME/.cargo"
-      export RUSTUP_HOME="$HOME/.rustup"
-
-      if [ "$(whoami)" = "${adminUser}" ]; then
-        export GEMINI_API_KEY="$(cat /run/secrets/api-keys/gemini)"
-        export ANTHROPIC_API_KEY="$(cat /run/secrets/api-keys/anthropic)"
-        export GOOGLE_CLOUD_PROJECT="$(cat /run/secrets/api-keys/google_cloud)"
-      fi
     '';
 
     environment.localBinInPath = true;

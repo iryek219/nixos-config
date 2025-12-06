@@ -7,10 +7,18 @@
 
   home.stateVersion = "25.05";
   home.packages = with pkgs; [ 
+                        julia
+                        rustup
+                        uv
+                        nodejs
+                        ripgrep
+                        fd
 			exercism 
 			guile 
 			age 
 			sops 
+                        gemini-cli
+                        claude-code
 		       ];
 
   # --- EMACS CONFIG ---
@@ -71,4 +79,13 @@
       token = builtins.readFile config.sops.secrets.exercism-token.path;
       workspace = "/home/hwan/learn/Exercism";
     };
+
+  home.sessionVariables = {
+    GEMINI_MODEL = "gemini-2.5-pro";
+    GEMINI_API_KEY = builtins.readFile "/run/secrets/api-keys/gemini";
+    ANTHROPIC_API_KEY = builtins.readFile "/run/secrets/api-keys/anthropic";
+    GOOGLE_CLOUD_PROJECT = builtins.readFile "/run/secrets/api-keys/google_cloud";
+    CARGO_HOME = "$HOME/.cargo";
+    RUSTUP_HOME = "$HOME/.rustup";
+  };
 }
