@@ -54,8 +54,8 @@ in
     ];
 
     environment.systemPackages = with pkgs; [
+      wl-clipboard
       tree
-      vim
       unzip
       wget
       git gh

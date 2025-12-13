@@ -10,7 +10,7 @@
                         julia
                         rustup
                         uv
-                        nodejs
+                        nodejs_20  # pin version to avoid accidental upgrade
                         ripgrep
                         fd
 			exercism 
@@ -21,11 +21,67 @@
                         claude-code
 		       ];
 
+  # --- VIM CONFIG ---
+  programs.vim = {
+    enable = true;
+    defaultEditor = true;
+    #package = pkgs.vim;
+    
+    settings = {
+      tabstop = 2;
+      shiftwidth = 2;
+      expandtab = true;
+    };
+    extraConfig = ''
+      set clipboard=unnamedplus
+      set number
+      set mouse=a
+    '';
+  };
+
+  # --- VSCode CONFIG ---
+  programs.vscode = {
+    enable = true;
+
+    profiles.default = {
+      userSettings = {
+        "vscode-vim.enable" = true;
+        "editor.lineNumbers" = "relative"; #VIM style
+        "editor.renderWhitespace" = "all";
+        "editor.tabSize" = 2;
+        "editor.formatOnSave" = true;
+
+        "workbench.colorTheme" = "Dracula Theme";
+      };
+      extensions = with pkgs.vscode-extensions; [
+        vscodevim.vim
+        bbenoist.nix               # Nix language
+        mhutchie.git-graph         # Git visualization
+        eamodio.gitlens            # Git Super-charged
+        yzhang.markdown-all-in-one 
+
+        ms-python.python
+        ms-python.vscode-pylance
+
+        elmtooling.elm-ls-vscode
+        ms-vscode.cpptools
+        rust-lang.rust-analyzer
+        golang.go
+        dbaeumer.vscode-eslint     # javascript/TypeScript linting
+        esbenp.prettier-vscode
+
+        dracula-theme.theme-dracula
+      ];
+    };
+  };
+  
+
   # --- EMACS CONFIG ---
   services.emacs.enable = true; 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacs;
+    #package = pkgs.emacs;       # defaults to GTK + X
+    package = pkgs.emacs-nox;  # terminal
     extraPackages = epkgs: [ epkgs.geiser epkgs.paredit ];
     extraConfig = ''
       (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
@@ -58,10 +114,12 @@
     
     secrets.oci-arm-key = {
       path = "${config.home.homeDirectory}/.ssh/oci-arm";
+      mode = "0400";
     };
     
     secrets.exercism-token = {
       path = "${config.home.homeDirectory}/.secrets/exercism";
+      mode = "0400";
     };
   };
 
@@ -77,15 +135,16 @@
    builtins.toJSON {
       apibaseurl = "https://api.exercism.org/v1";
       token = builtins.readFile config.sops.secrets.exercism-token.path;
-      workspace = "/home/hwan/learn/Exercism";
+      workspace = "${config.home.homeDirectory}/learn/Exercism";
     };
 
   home.sessionVariables = {
+    CARGO_HOME = "$HOME/.cargo";
+    RUSTUP_HOME = "$HOME/.rustup";
+
     GEMINI_MODEL = "gemini-2.5-pro";
     GEMINI_API_KEY = builtins.readFile "/run/secrets/api-keys/gemini";
     ANTHROPIC_API_KEY = builtins.readFile "/run/secrets/api-keys/anthropic";
     GOOGLE_CLOUD_PROJECT = builtins.readFile "/run/secrets/api-keys/google_cloud";
-    CARGO_HOME = "$HOME/.cargo";
-    RUSTUP_HOME = "$HOME/.rustup";
   };
 }
