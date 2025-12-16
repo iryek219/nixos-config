@@ -49,7 +49,7 @@
         oci-arm = mkSystem {
           hostname = "oracle-arm";
           system = "aarch64-linux";
-          hmUser = "ubuntu";
+          hmUser = "hwan";
           modules = [];
         };
         
