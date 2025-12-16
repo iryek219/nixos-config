@@ -10,26 +10,25 @@
 
   home.stateVersion = "25.05";
   home.packages = with pkgs; [ 
-                        julia
-                        rustup
-                        uv
-                        nodejs_20  # pin version to avoid accidental upgrade
-                        ripgrep
-                        fd
-			exercism 
-			guile 
-			age 
-			sops 
-                        gemini-cli
-                        claude-code
-		       ];
+                              julia
+                              rustup
+                              uv
+                              nodejs_20  # pin version to avoid accidental upgrade
+                              ripgrep
+                              fd
+                              exercism
+                              guile
+                              age
+                              sops
+                              gemini-cli
+                              claude-code
+                            ];
 
   # --- VIM CONFIG ---
   programs.vim = {
     enable = true;
     defaultEditor = true;
     #package = pkgs.vim;
-    
     settings = {
       tabstop = 2;
       shiftwidth = 2;
