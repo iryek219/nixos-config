@@ -126,7 +126,7 @@
   home.file.".ssh/config".text = ''
     Host oci-arm
       HostName 193.123.224.61
-      User ubuntu
+      User hwan
       IdentityFile ~/.ssh/oci-arm
       StrictHostKeyChecking accept-new
   '';
