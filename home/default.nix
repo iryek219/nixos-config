@@ -1,12 +1,15 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, hostname, ... }:
 
 {
 
   imports =
     [
       inputs.sops-nix.homeManagerModules.sops
-      ./vscode.nix
-    ];
+    ]
+    ++ (if builtins.elem hostname [ "h-tuf" ] then
+      [ ./vscode.nix ]
+    else
+      [ ]);
 
   home.stateVersion = "25.05";
   home.packages = with pkgs; [ 
