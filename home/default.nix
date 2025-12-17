@@ -99,20 +99,43 @@
       StrictHostKeyChecking accept-new
   '';
 
-  home.file.".config/exercism/user.json".text =
-   builtins.toJSON {
+  #home.file.".config/exercism/user.json".text =
+  # builtins.toJSON {
+  #    apibaseurl = "https://api.exercism.org/v1";
+  #    token = builtins.readFile config.sops.secrets.exercism-token.path;
+  #    workspace = "${config.home.homeDirectory}/learn/Exercism";
+  #  };
+  sops.templates."exercism-user.json" = {
+    # Where the resulting config file should be placed
+    path = "${config.home.homeDirectory}/.config/exercism/user.json"; 
+
+    # The content of the file. 
+    # sops-nix will replace the placeholder with the actual secret at runtime.
+    content = builtins.toJSON {
       apibaseurl = "https://api.exercism.org/v1";
-      token = builtins.readFile config.sops.secrets.exercism-token.path;
+      token = config.sops.placeholder.exercism-token; 
       workspace = "${config.home.homeDirectory}/learn/Exercism";
     };
+  };
 
   home.sessionVariables = {
     CARGO_HOME = "$HOME/.cargo";
     RUSTUP_HOME = "$HOME/.rustup";
-
     GEMINI_MODEL = "gemini-2.5-pro";
-    GEMINI_API_KEY = builtins.readFile "/run/secrets/api-keys/gemini";
-    ANTHROPIC_API_KEY = builtins.readFile "/run/secrets/api-keys/anthropic";
-    GOOGLE_CLOUD_PROJECT = builtins.readFile "/run/secrets/api-keys/google_cloud";
+    #GEMINI_API_KEY = builtins.readFile "/run/secrets/api-keys/gemini";
+    #ANTHROPIC_API_KEY = builtins.readFile "/run/secrets/api-keys/anthropic";
+    #GOOGLE_CLOUD_PROJECT = builtins.readFile "/run/secrets/api-keys/google_cloud";
   };
+
+  programs.bash.initExtra = ''
+    if [ -f "/run/secrets/api-keys/gemini" ]; then
+      export GEMINI_API_KEY=$(cat "/run/secrets/api-keys/gemini")
+    fi
+    if [ -f "/run/secrets/api-keys/anthropic" ]; then
+      export ANTHROPIC_API_KEY=$(cat "/run/secrets/api-keys/anthropic")
+    fi
+    if [ -f "/run/secrets/api-keys/google_cloud" ]; then
+      export GOOGLE_CLOUD_PROJECT=$(cat "/run/secrets/api-keys/google_cloud")
+    fi
+  '';
 }
