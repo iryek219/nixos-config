@@ -25,7 +25,12 @@
                               sops
                               gemini-cli
                               claude-code
-                            ];
+                              arduino-cli
+                            ]
+                            ++ (if builtins.elem hostname [ "h-tuf" "p-wsl" ] then
+                              [ arduino-ide ]
+                            else
+                              [ ]);
 
   # --- VIM CONFIG ---
   programs.vim = {
