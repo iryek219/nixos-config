@@ -16,7 +16,7 @@
   users.users.hwan = {
     isNormalUser = true;
     description = "Hyunghwan Shin";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "uucp" ];
     group = "hwan";
     packages = with pkgs; [
       #  thunderbird
