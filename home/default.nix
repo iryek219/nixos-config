@@ -28,7 +28,9 @@
                               arduino-cli
                             ]
                             ++ (if builtins.elem hostname [ "h-tuf" "p-wsl" ] then
-                              [ arduino-ide ]
+                              [ arduino-ide 
+                                inkscape
+                              ]
                             else
                               [ ]);
 
