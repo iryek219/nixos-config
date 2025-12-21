@@ -26,6 +26,10 @@
           ./hosts/${hostname}
           
           sops-nix.nixosModules.sops
+
+          {
+            nixpkgs.config.allowUnfree = true;
+          }
           
           home-manager.nixosModules.home-manager
 
