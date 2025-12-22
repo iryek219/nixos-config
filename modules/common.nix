@@ -53,6 +53,8 @@ in
       "en_US.UTF-8/UTF-8"
     ];
 
+    environment.etc."ssl/cert.pem".source = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+
     environment.systemPackages = with pkgs; [
       wl-clipboard
       tree
