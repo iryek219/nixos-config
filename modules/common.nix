@@ -58,6 +58,7 @@ in
     environment.systemPackages = with pkgs; [
       wl-clipboard
       tree
+      zip
       unzip
       wget
       curl
