@@ -2,6 +2,7 @@
 {
   wsl.enable = true;
   wsl.defaultUser = "hwan";
+  wsl.usbip.enable = true;
 
   # nix-ld is usually needed for WSL to run binaries like VSCode Server
   programs.nix-ld.enable = true;
