@@ -30,6 +30,7 @@
                             ++ (if builtins.elem hostname [ "h-tuf" "p-wsl" ] then
                               [ arduino-ide 
                                 inkscape
+                                audacity
                               ]
                             else
                               [ ]);
