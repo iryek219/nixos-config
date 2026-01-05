@@ -40,6 +40,7 @@ in
         xorg.libX11
         xorg.libX11.dev
         expat
+        libGL
       ];
     };
 
