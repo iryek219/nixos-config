@@ -35,6 +35,11 @@
                             else
                               [ ]);
 
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   # --- VIM CONFIG ---
   programs.vim = {
     enable = true;
