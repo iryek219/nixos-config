@@ -15,7 +15,6 @@
   home.packages = with pkgs; [ 
                               julia
                               rustup
-                              uv
                               nodejs_20  # pin version to avoid accidental upgrade
                               ripgrep
                               fd
