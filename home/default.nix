@@ -13,6 +13,10 @@
 
   home.stateVersion = "25.05";
   home.packages = with pkgs; [ 
+                              python3
+                              ruff       # fask linter/formatter replacing flake8/black/isort
+                              #black      # alternative
+                              pyright    # python LSP server
                               julia
                               rustup
                               nodejs_20  # pin version to avoid accidental upgrade
