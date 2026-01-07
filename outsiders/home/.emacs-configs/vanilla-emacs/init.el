@@ -23,7 +23,8 @@
 ;; Geiser Setup
 (setq geiser-default-implementations '((scheme . guile)))
 (add-hook 'scheme-mode-hook 'geiser-mode)
-(define-key geiser-mode-map (kbd "C-c C-r") 'geiser-restart)
+(with-eval-after-load 'geiser-mode
+  (define-key geiser-mode-map (kbd "C-c C-r") 'geiser-restart))
 
 ;; 환영 메시지
 (message "Vanilla Emacs with Scheme config loaded!")
