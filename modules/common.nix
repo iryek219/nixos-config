@@ -64,7 +64,6 @@ in
       unzip
       wget
       curl
-      git gh
       gcc
       clang
       gnumake

@@ -13,17 +13,24 @@
 
   home.stateVersion = "25.05";
   home.packages = with pkgs; [ 
+                              git
+                              gh
+                              ripgrep
+                              fd
+                              guile
+                              nerd-fonts.jetbrains-mono  # font for emacs in WSL2
+                              adwaita-icon-theme         # for emacs cursor in WSL2
+
                               python3
-                              ruff       # fask linter/formatter replacing flake8/black/isort
-                              #black      # alternative
-                              pyright    # python LSP server
+                              ruff              # fask linter/formatter replacing flake8/black/isort
+                              #black            # alternative
+                              pyright           # python LSP server
+                              nixfmt-rfc-style  # Nix formatter
+
                               julia
                               rustup
                               nodejs_20  # pin version to avoid accidental upgrade
-                              ripgrep
-                              fd
                               exercism
-                              guile
                               age
                               sops
                               gemini-cli
@@ -36,7 +43,13 @@
                                 audacity
                               ]
                             else
+                              [ ])
+                            ++ (if hostname == "p-wsl" then
+                              [ wslu ]
+                            else
                               [ ]);
+
+  fonts.fontconfig.enable = true;  # Doom Emacs (Optional)
 
   programs.direnv = {
     enable = true;
@@ -61,30 +74,30 @@
   };
 
   # --- EMACS CONFIG ---
-  services.emacs.enable = true; 
+  services.emacs.enable = false;
   programs.emacs = {
     enable = true;
     #package = pkgs.emacs;       # defaults to GTK + X
-    package = pkgs.emacs-nox;  # terminal
-    extraPackages = epkgs: [ epkgs.geiser epkgs.paredit ];
-    extraConfig = ''
-      (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-      (add-hook 'lisp-mode-hook 'paredit-mode)
-      (add-hook 'scheme-mode-hook 'paredit-mode)
-      (add-hook 'clojure-mode-hook 'paredit-mode)
-      
-      ;; Geiser Setup
-      (setq geiser-default-implementations '((scheme . guile)))
-      (add-hook 'scheme-mode-hook 'geiser-mode)
-      (define-key geiser-mode-map (kbd "C-c C-r") 'geiser-restart)
-    '';
+    #package = pkgs.emacs-nox;  # terminal
+    # Doom Emacs 성능을 위해 native-comp 기능이 있는 버전 추천
+    # nox를 원하면 pkgs.emacs30-nox 등을 써도 되지만, Doom은 기본 패키지를 더 권장
+    package = pkgs.emacs30-pgtk;
+    # 중요: extraConfig와 extraPackages는 모두 삭제
+    # 설정 관리는 Chemacs2와 각 Emacs 프로필이 담당
   };
 
   # --- SHELL ALIASES ---
   programs.bash = {
     enable = true;
     shellAliases = {
-      emacsnox = "emacs -nw";
+
+      # 프로필별 실행 명령어
+      doom = "emacs --with-profile doom";
+      emacsv = "emacs --with-profile vanilla";
+
+      doom-nox = "emacs -nw"; # Doom이 기본이 됨
+      emacs-nox = "emacs --with-profile vanilla -nw"; # 터미널 모드 Vanilla 실행 (기존 emacsnox 느낌)
+
       ec = "emacsclient -t -a \"\"";
       ll = "ls -alh";
       l = "ls -l";
@@ -106,6 +119,16 @@
       mode = "0400";
     };
   };
+
+  # Chemacs2 프로필 설정 파일 생성 (Nix로 관리하면 편합니다)
+  home.file.".emacs-profiles.el".text = ''
+    (
+     ("default" . ((user-emacs-directory . "~/.emacs-configs/doom-emacs")))
+     ("doom"    . ((user-emacs-directory . "~/.emacs-configs/doom-emacs")
+                   (env . (("DOOMDIR" . "~/.config/doom")))))
+     ("vanilla" . ((user-emacs-directory . "~/.emacs-configs/vanilla-emacs")))
+    )
+  '';
 
   home.file.".ssh/config".text = ''
     Host oci-arm
