@@ -130,6 +130,11 @@
     )
   '';
 
+  home.file.".guile".text = ''
+    (use-modules (ice-9 readline))
+    (activate-readline)
+  '';
+
   home.file.".ssh/config".text = ''
     Host oci-arm
       HostName 193.123.224.61
