@@ -165,7 +165,7 @@
   home.sessionVariables = {
     CARGO_HOME = "$HOME/.cargo";
     RUSTUP_HOME = "$HOME/.rustup";
-    GEMINI_MODEL = "gemini-2.5-pro";
+    GEMINI_MODEL = "gemini-3-pro-preview";
     #GEMINI_API_KEY = builtins.readFile "/run/secrets/api-keys/gemini";
     #ANTHROPIC_API_KEY = builtins.readFile "/run/secrets/api-keys/anthropic";
     #GOOGLE_CLOUD_PROJECT = builtins.readFile "/run/secrets/api-keys/google_cloud";
