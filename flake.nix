@@ -18,6 +18,8 @@
 
   outputs = { self, nixpkgs, nixos-wsl, home-manager, sops-nix, ... }@inputs:
     let
+      forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ];
+
       mkSystem = { hostname, system, modules, wsl ? false, hmUser }: nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs; }; 
@@ -73,5 +75,7 @@
           modules = [];
         };
       };
+
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
     };
 }
