@@ -1,15 +1,16 @@
-{ config, lib, pkgs, ... }:
-
-let
-  vars = import ./vars.nix;
-in
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/v1.11.0.tar.gz"}/module.nix"
-     ./disk-config.nix
-    ];
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  vars = import ./vars.nix;
+in {
+  imports = [
+    ./hardware-configuration.nix
+    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/v1.11.0.tar.gz"}/module.nix"
+    ./disk-config.nix
+  ];
 
   system.adminUser = "hwan";
 
@@ -37,7 +38,7 @@ in
     users.${vars.username} = {
       isNormalUser = true;
       extraGroups = ["networkmanager" "wheel"];
-      openssh.authorizedKeys.keys = [ vars.sshKey ];
+      openssh.authorizedKeys.keys = [vars.sshKey];
     };
   };
 
@@ -70,7 +71,7 @@ in
   services.getty.autologinUser = null;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedTCPPorts = [22];
   # networking.firewall.allowedUDPPorts = [ ... ];
 
   # Disable documentation for minimal install.

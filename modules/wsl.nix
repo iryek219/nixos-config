@@ -1,5 +1,9 @@
-{ config, pkgs, lib, ... }:
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   wsl.enable = true;
   wsl.defaultUser = "hwan";
   wsl.usbip.enable = true;

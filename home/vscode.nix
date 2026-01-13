@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # --- VSCode CONFIG ---
   programs.vscode = {
     enable = true;
@@ -17,10 +15,10 @@
       };
       extensions = with pkgs.vscode-extensions; [
         vscodevim.vim
-        bbenoist.nix               # Nix language
-        mhutchie.git-graph         # Git visualization
-        eamodio.gitlens            # Git Super-charged
-        yzhang.markdown-all-in-one 
+        bbenoist.nix # Nix language
+        mhutchie.git-graph # Git visualization
+        eamodio.gitlens # Git Super-charged
+        yzhang.markdown-all-in-one
 
         ms-python.python
         ms-python.vscode-pylance
@@ -29,7 +27,7 @@
         ms-vscode.cpptools
         rust-lang.rust-analyzer
         golang.go
-        dbaeumer.vscode-eslint     # javascript/TypeScript linting
+        dbaeumer.vscode-eslint # javascript/TypeScript linting
         esbenp.prettier-vscode
 
         dracula-theme.theme-dracula
@@ -37,4 +35,3 @@
     };
   };
 }
-

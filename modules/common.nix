@@ -1,10 +1,14 @@
-{ config, pkgs, inputs, lib, ... }:
-let
-  adminUser = config.system.adminUser or "root";
-  libs = [ pkgs.stdenv.cc.cc.lib pkgs.gcc.cc.lib pkgs.libGL ];
-  uniqueLibs = inputs.nixpkgs.lib.lists.unique (map inputs.nixpkgs.lib.getLib libs);
-in
 {
+  config,
+  pkgs,
+  inputs,
+  lib,
+  ...
+}: let
+  adminUser = config.system.adminUser or "root";
+  libs = [pkgs.stdenv.cc.cc.lib pkgs.gcc.cc.lib pkgs.libGL];
+  uniqueLibs = inputs.nixpkgs.lib.lists.unique (map inputs.nixpkgs.lib.getLib libs);
+in {
   # --- 1. DEFINE THE NEW OPTION PATH ---
   options.system.adminUser = lib.mkOption {
     type = lib.types.str;
@@ -17,13 +21,13 @@ in
 
   # --- 2. WRAP ALL CONFIGURATION ATTRIBUTES IN 'config' ---
   config = {
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nix.settings.experimental-features = ["nix-command" "flakes"];
     nixpkgs.config.allowUnfree = true;
 
     # Ensure the Nixpkgs from your flake input can be found via the traditional <nixpkgs> path
     #nix.nixPath = [ "nixpkgs=${inputs.nixpkgs.outPath}" ];
-    nix.nixPath = [ ];
-    
+    nix.nixPath = [];
+
     # This makes your flake inputs available in the registry for new-style commands
     # like `nix build nixpkgs#hello` without explicitly passing the flake input.
     nix.registry = {
@@ -35,7 +39,7 @@ in
     programs.nix-ld = {
       enable = true;
       libraries = with pkgs; [
-        stdenv.cc.cc.lib    # libquadmath, libfortran, libstdc++, etc
+        stdenv.cc.cc.lib # libquadmath, libfortran, libstdc++, etc
         gcc.cc.lib
         xorg.libX11
         xorg.libX11.dev
@@ -69,9 +73,12 @@ in
       gnumake
       cmake
       pkg-config
-      openssl openssl.dev
-      sqlite sqlite.dev
-      zlib zlib.dev
+      openssl
+      openssl.dev
+      sqlite
+      sqlite.dev
+      zlib
+      zlib.dev
       ffmpeg-full
       yt-dlp
     ];
@@ -91,7 +98,7 @@ in
     sops = {
       age.keyFile = "/home/${adminUser}/.config/sops/age/keys.txt";
       defaultSopsFile = ../secrets/secrets.yaml;
-	  
+
       secrets."api-keys/google_cloud" = {
         owner = adminUser;
       };

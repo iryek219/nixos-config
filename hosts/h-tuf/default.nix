@@ -1,5 +1,8 @@
-{ config, pkgs, ... }:
 {
+  config,
+  pkgs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
   ];
@@ -7,7 +10,7 @@
   system.stateVersion = "25.05";
   system.adminUser = "hwan";
   networking.hostName = "h-tuf";
-  
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -16,7 +19,7 @@
   users.users.hwan = {
     isNormalUser = true;
     description = "Hyunghwan Shin";
-    extraGroups = [ "networkmanager" "wheel" "dialout" "uucp" ];
+    extraGroups = ["networkmanager" "wheel" "dialout" "uucp"];
     group = "hwan";
     packages = with pkgs; [
       #  thunderbird
@@ -38,22 +41,22 @@
   ];
 
   i18n.extraLocaleSettings = {
-      LC_ADDRESS = "ko_KR.UTF-8";
-      LC_IDENTIFICATION = "ko_KR.UTF-8";
-      LC_MEASUREMENT = "ko_KR.UTF-8";
-      LC_MONETARY = "ko_KR.UTF-8";
-      LC_NAME = "ko_KR.UTF-8";
-      LC_NUMERIC = "ko_KR.UTF-8";
-      LC_PAPER = "ko_KR.UTF-8";
-      LC_TELEPHONE = "ko_KR.UTF-8";
-      LC_TIME = "ko_KR.UTF-8";
-    };
+    LC_ADDRESS = "ko_KR.UTF-8";
+    LC_IDENTIFICATION = "ko_KR.UTF-8";
+    LC_MEASUREMENT = "ko_KR.UTF-8";
+    LC_MONETARY = "ko_KR.UTF-8";
+    LC_NAME = "ko_KR.UTF-8";
+    LC_NUMERIC = "ko_KR.UTF-8";
+    LC_PAPER = "ko_KR.UTF-8";
+    LC_TELEPHONE = "ko_KR.UTF-8";
+    LC_TIME = "ko_KR.UTF-8";
+  };
   i18n.inputMethod = {
-      enable = true;
-      type = "ibus";
-      ibus = {
-        engines = with pkgs.ibus-engines; [ hangul ];
-      };
+    enable = true;
+    type = "ibus";
+    ibus = {
+      engines = with pkgs.ibus-engines; [hangul];
+    };
   };
 
   services.xserver.enable = true;
@@ -81,5 +84,4 @@
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
-
 }

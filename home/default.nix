@@ -1,55 +1,63 @@
-{ config, pkgs, inputs, hostname, ... }:
-
 {
-
+  config,
+  pkgs,
+  inputs,
+  hostname,
+  ...
+}: {
   imports =
     [
       inputs.sops-nix.homeManagerModules.sops
     ]
-    ++ (if builtins.elem hostname [ "h-tuf" ] then
-      [ ./vscode.nix ]
-    else
-      [ ]);
+    ++ (
+      if builtins.elem hostname ["h-tuf"]
+      then [./vscode.nix]
+      else []
+    );
 
   home.stateVersion = "25.05";
-  home.packages = with pkgs; [ 
-                              git
-                              gh
-                              ripgrep
-                              fd
-                              guile
-                              nerd-fonts.jetbrains-mono  # font for emacs in WSL2
-                              adwaita-icon-theme         # for emacs cursor in WSL2
+  home.packages = with pkgs;
+    [
+      git
+      gh
+      ripgrep
+      fd
+      guile
+      nerd-fonts.jetbrains-mono # font for emacs in WSL2
+      adwaita-icon-theme # for emacs cursor in WSL2
 
-                              python3
-                              ruff              # fask linter/formatter replacing flake8/black/isort
-                              #black            # alternative
-                              pyright           # python LSP server
-                              nixfmt-rfc-style  # Nix formatter
+      python3
+      ruff # fask linter/formatter replacing flake8/black/isort
+      #black            # alternative
+      pyright # python LSP server
+      nixfmt-rfc-style # Nix formatter
 
-                              #julia
-                              rustup
-                              nodejs_20  # pin version to avoid accidental upgrade
-                              exercism
-                              age
-                              sops
-                              gemini-cli
-                              claude-code
-                              arduino-cli
-                            ]
-                            ++ (if builtins.elem hostname [ "h-tuf" "p-wsl" ] then
-                              [ arduino-ide 
-                                inkscape
-                                audacity
-                              ]
-                            else
-                              [ ])
-                            ++ (if hostname == "p-wsl" then
-                              [ wslu ]
-                            else
-                              [ ]);
+      #julia
+      rustup
+      nodejs_20 # pin version to avoid accidental upgrade
+      exercism
+      age
+      sops
+      gemini-cli
+      claude-code
+      arduino-cli
+    ]
+    ++ (
+      if builtins.elem hostname ["h-tuf" "p-wsl"]
+      then [
+        arduino-ide
+        inkscape
+        audacity
+      ]
+      else []
+    )
+    ++ (
+      if hostname == "p-wsl"
+      then [wslu]
+      else []
+    );
 
-  fonts.fontconfig.enable = true;  # Doom Emacs (Optional)
+  fonts.fontconfig.enable = true; # Doom Emacs (Optional)
 
   programs.direnv = {
     enable = true;
@@ -90,7 +98,6 @@
   programs.bash = {
     enable = true;
     shellAliases = {
-
       # 프로필별 실행 명령어
       doom = "emacs --with-profile doom";
       emacsv = "emacs --with-profile vanilla";
@@ -108,12 +115,12 @@
   sops = {
     age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
     defaultSopsFile = ../secrets/secrets.yaml;
-    
+
     secrets.oci-arm-key = {
       path = "${config.home.homeDirectory}/.ssh/oci-arm";
       mode = "0400";
     };
-    
+
     secrets.exercism-token = {
       path = "${config.home.homeDirectory}/.secrets/exercism";
       mode = "0400";
@@ -151,13 +158,13 @@
   #  };
   sops.templates."exercism-user.json" = {
     # Where the resulting config file should be placed
-    path = "${config.home.homeDirectory}/.config/exercism/user.json"; 
+    path = "${config.home.homeDirectory}/.config/exercism/user.json";
 
-    # The content of the file. 
+    # The content of the file.
     # sops-nix will replace the placeholder with the actual secret at runtime.
     content = builtins.toJSON {
       apibaseurl = "https://api.exercism.org/v1";
-      token = config.sops.placeholder.exercism-token; 
+      token = config.sops.placeholder.exercism-token;
       workspace = "${config.home.homeDirectory}/learn/Exercism";
     };
   };
