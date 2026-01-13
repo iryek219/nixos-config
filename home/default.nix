@@ -100,9 +100,9 @@
     shellAliases = {
       # 프로필별 실행 명령어
       doom = "emacs --with-profile doom";
-      emacsv = "emacs --with-profile vanilla";
+      emacs = "emacs --with-profile vanilla";
 
-      doom-nox = "emacs -nw"; # Doom이 기본이 됨
+      doom-nox = "emacs --with-profile doom -nw";
       emacs-nox = "emacs --with-profile vanilla -nw"; # 터미널 모드 Vanilla 실행 (기존 emacsnox 느낌)
 
       ec = "emacsclient -t -a \"\"";
@@ -111,26 +111,10 @@
     };
   };
 
-  # --- SECRETS (SOPS) ---
-  sops = {
-    age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
-    defaultSopsFile = ../secrets/secrets.yaml;
-
-    secrets.oci-arm-key = {
-      path = "${config.home.homeDirectory}/.ssh/oci-arm";
-      mode = "0400";
-    };
-
-    secrets.exercism-token = {
-      path = "${config.home.homeDirectory}/.secrets/exercism";
-      mode = "0400";
-    };
-  };
-
   # Chemacs2 프로필 설정 파일 생성 (Nix로 관리하면 편합니다)
   home.file.".emacs-profiles.el".text = ''
     (
-     ("default" . ((user-emacs-directory . "~/.emacs-configs/doom-emacs")))
+     ("default" . ((user-emacs-directory . "~/.emacs-configs/vanilla-emacs")))
      ("doom"    . ((user-emacs-directory . "~/.emacs-configs/doom-emacs")
                    (env . (("DOOMDIR" . "~/.config/doom")))))
      ("vanilla" . ((user-emacs-directory . "~/.emacs-configs/vanilla-emacs")))
@@ -156,6 +140,23 @@
   #    token = builtins.readFile config.sops.secrets.exercism-token.path;
   #    workspace = "${config.home.homeDirectory}/learn/Exercism";
   #  };
+
+  # --- SECRETS (SOPS) ---
+  sops = {
+    age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
+    defaultSopsFile = ../secrets/secrets.yaml;
+
+    secrets.oci-arm-key = {
+      path = "${config.home.homeDirectory}/.ssh/oci-arm";
+      mode = "0400";
+    };
+
+    secrets.exercism-token = {
+      path = "${config.home.homeDirectory}/.secrets/exercism";
+      mode = "0400";
+    };
+  };
+
   sops.templates."exercism-user.json" = {
     # Where the resulting config file should be placed
     path = "${config.home.homeDirectory}/.config/exercism/user.json";
