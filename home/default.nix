@@ -30,7 +30,7 @@
       ruff # fask linter/formatter replacing flake8/black/isort
       #black            # alternative
       pyright # python LSP server
-      nixfmt-rfc-style # Nix formatter
+      nixfmt # Nix formatter
 
       #julia
       rustup
