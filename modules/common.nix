@@ -21,7 +21,12 @@ in {
 
   # --- 2. WRAP ALL CONFIGURATION ATTRIBUTES IN 'config' ---
   config = {
-    nix.settings.experimental-features = ["nix-command" "flakes"];
+    nix.settings = {
+      experimental-features = ["nix-command" "flakes"];
+      # 버퍼를 128MB(또는 더 크게 256MB)로 늘립니다. 단위는 바이트입니다.
+      download-buffer-size = 256 * 1024 * 1024;
+    };
+
     nixpkgs.config.allowUnfree = true;
 
     # Ensure the Nixpkgs from your flake input can be found via the traditional <nixpkgs> path
