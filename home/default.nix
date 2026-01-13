@@ -27,7 +27,7 @@
                               pyright           # python LSP server
                               nixfmt-rfc-style  # Nix formatter
 
-                              julia
+                              #julia
                               rustup
                               nodejs_20  # pin version to avoid accidental upgrade
                               exercism
