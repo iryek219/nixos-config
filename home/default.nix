@@ -109,6 +109,8 @@
       ec = "emacsclient -t -a \"\"";
       ll = "ls -alh";
       l = "ls -l";
+      glmcode = "ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic ANTHROPIC_AUTH_TOKEN=$(cat \"/run/secrets/api-keys/zai\") API_TIMEOUT_MS=3000000 claude --settings $HOME/.claude/settings-glm.json";
+      claude = "ANTHROPIC_API_KEY=$(cat \"/run/secrets/api-keys/anthropic\") claude";
     };
   };
 
@@ -133,6 +135,16 @@
       User hwan
       IdentityFile ~/.ssh/oci-arm
       StrictHostKeyChecking accept-new
+  '';
+
+  home.file.".claude/settings-glm.json".text = ''
+    {
+      "env": {
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4.7",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.7"
+      }
+    }
   '';
 
   #home.file.".config/exercism/user.json".text =
@@ -184,11 +196,11 @@
     if [ -f "/run/secrets/api-keys/gemini" ]; then
       export GEMINI_API_KEY=$(cat "/run/secrets/api-keys/gemini")
     fi
-    if [ -f "/run/secrets/api-keys/anthropic" ]; then
-      export ANTHROPIC_API_KEY=$(cat "/run/secrets/api-keys/anthropic")
-    fi
     if [ -f "/run/secrets/api-keys/google_cloud" ]; then
       export GOOGLE_CLOUD_PROJECT=$(cat "/run/secrets/api-keys/google_cloud")
+    fi
+    if [ -f "/run/secrets/api-keys/zai" ]; then
+      export ZAI_API_KEY=$(cat "/run/secrets/api-keys/zai")
     fi
   '';
 }

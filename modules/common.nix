@@ -113,6 +113,9 @@ in {
       secrets."api-keys/anthropic" = {
         owner = adminUser;
       };
+      secrets."api-keys/zai" = {
+        owner = adminUser;
+      };
     };
   };
 }
