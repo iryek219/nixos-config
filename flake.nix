@@ -17,6 +17,8 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    opencode-flake.url = "github:aodhanhayter/opencode-flake";
   };
 
   outputs = {

@@ -40,6 +40,7 @@
       sops
       gemini-cli
       claude-code
+      inputs.opencode-flake.packages.${pkgs.system}.default
       arduino-cli
     ]
     ++ (
