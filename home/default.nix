@@ -35,6 +35,7 @@
       #julia
       rustup
       nodejs_20 # pin version to avoid accidental upgrade
+      bun
       exercism
       age
       sops
