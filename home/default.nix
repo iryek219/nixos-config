@@ -42,6 +42,9 @@
       claude-code
       inputs.opencode-flake.packages.${pkgs.system}.default
       arduino-cli
+      (writeShellScriptBin "doom" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs \"$@\"")
+      (writeShellScriptBin "emacs-nox" "CHEMACS_PROFILE=vanilla exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
+      (writeShellScriptBin "doom-nox" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
     ]
     ++ (
       if builtins.elem hostname ["h-tuf" "p-wsl"]
@@ -100,11 +103,6 @@
     enable = true;
     shellAliases = {
       # 프로필별 실행 명령어
-      doom = "emacs --with-profile doom";
-      emacs = "emacs --with-profile vanilla";
-
-      doom-nox = "emacs --with-profile doom -nw";
-      emacs-nox = "emacs --with-profile vanilla -nw"; # 터미널 모드 Vanilla 실행 (기존 emacsnox 느낌)
 
       ec = "emacsclient -t -a \"\"";
       ll = "ls -alh";
@@ -123,6 +121,9 @@
      ("vanilla" . ((user-emacs-directory . "~/.emacs-configs/vanilla-emacs")))
     )
   '';
+
+  # Chemacs2 installation
+  home.file.".emacs.d".source = "${pkgs.chemacs2}/share/site-lisp/chemacs2";
 
   home.file.".guile".text = ''
     (use-modules (ice-9 readline))
