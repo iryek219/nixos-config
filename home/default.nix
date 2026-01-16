@@ -109,7 +109,7 @@
       ll = "ls -alh";
       l = "ls -l";
       glmcode = "ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic ANTHROPIC_AUTH_TOKEN=$(cat \"/run/secrets/api-keys/zai\") API_TIMEOUT_MS=3000000 claude --settings $HOME/.claude/settings-glm.json";
-      claude = "ANTHROPIC_API_KEY=$(cat \"/run/secrets/api-keys/anthropic\") claude";
+      ccode = "ANTHROPIC_AUTH_TOKEN=$(cat \"/run/secrets/api-keys/anthropic\") claude";
     };
   };
 
