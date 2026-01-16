@@ -99,6 +99,34 @@
     # 설정 관리는 Chemacs2와 각 Emacs 프로필이 담당
   };
 
+  programs.tmux = {
+    enable = true;
+    shell = "${pkgs.bash}/bin/bash";
+    terminal = "screen-256color";
+    historyLimit = 100000;
+    plugins = with pkgs; [
+      tmuxPlugins.better-mouse-mode
+      tmuxPlugins.catppuccin
+      {
+        plugin = tmuxPlugins.resurrect;
+        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+      }
+      {
+        plugin = tmuxPlugins.continuum;
+        extraConfig = ''
+          set -g @continuum-restore 'on'
+          set -g @continuum-save-interval '60' # minutes
+        '';
+      }
+    ];
+    extraConfig = ''
+      set -g mouse on
+      # bind  c  new-window      -c "#{pane_current_path}"
+      # bind  %  split-window -h -c "#{pane_current_path}"
+      # bind '"' split-window -v -c "#{pane_current_path}"
+    '';
+  };
+
   # --- SHELL ALIASES ---
   programs.bash = {
     enable = true;
