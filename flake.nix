@@ -18,6 +18,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     opencode-flake.url = "github:aodhanhayter/opencode-flake";
   };
 
@@ -27,6 +28,7 @@
     nixos-wsl,
     home-manager,
     sops-nix,
+    codex-cli-nix,
     ...
   } @ inputs: let
     forAllSystems = nixpkgs.lib.genAttrs ["x86_64-linux" "aarch64-linux"];
