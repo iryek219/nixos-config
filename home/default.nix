@@ -79,7 +79,7 @@
       
       # Example: Tweaking the git module to show the branch in green
       git_branch = {
-        style = "green";
+        style = "bold #ff9900";
         symbol = "🌱 ";
       };
     };
