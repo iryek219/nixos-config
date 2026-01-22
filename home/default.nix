@@ -70,6 +70,21 @@
     nix-direnv.enable = true;
   };
 
+  programs.starship = {
+    enable = true;
+    
+    # Optional: Customize the look (presets available online)
+    settings = {
+      add_newline = false; # Don't print a new line at the start
+      
+      # Example: Tweaking the git module to show the branch in green
+      git_branch = {
+        style = "green";
+        symbol = "🌱 ";
+      };
+    };
+  };
+
   # --- VIM CONFIG ---
   programs.vim = {
     enable = true;
