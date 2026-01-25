@@ -27,6 +27,12 @@ in {
       download-buffer-size = 256 * 1024 * 1024;
     };
 
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "delete-older-than 7d";
+    };
+
     nixpkgs.config.allowUnfree = true;
 
     # Ensure the Nixpkgs from your flake input can be found via the traditional <nixpkgs> path
