@@ -20,6 +20,12 @@
 
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     opencode-flake.url = "github:aodhanhayter/opencode-flake";
+
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs = {
@@ -29,6 +35,7 @@
     home-manager,
     sops-nix,
     codex-cli-nix,
+    nix-on-droid,
     ...
   } @ inputs: let
     forAllSystems = nixpkgs.lib.genAttrs ["x86_64-linux" "aarch64-linux"];
@@ -99,6 +106,39 @@
         system = "x86_64-linux";
         hmUser = "hwan";
         modules = [];
+      };
+    };
+
+    nixOnDroidConfigurations = {
+      h-fold41 = nix-on-droid.lib.nixOnDroidConfiguration {
+        pkgs = import nixpkgs {
+          system = "aarch64-linux";
+          overlays = [
+            (final: prev: {
+              # Add any overlays here if needed
+            })
+          ];
+          config.allowUnfree = true;
+        };
+        modules = [
+          ./hosts/h-fold41/default.nix
+          {
+            _module.args = {
+              inherit inputs;
+              hostname = "h-fold41";
+            };
+          }
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              hostname = "h-fold41";
+            };
+            home-manager.config = import ./home/default.nix;
+          }
+        ];
+        home-manager-path = home-manager.outPath;
       };
     };
 
