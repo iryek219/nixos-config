@@ -41,13 +41,19 @@
       sops
       gemini-cli
       claude-code
-      inputs.codex-cli-nix.packages.${pkgs.system}.default
-      inputs.opencode-flake.packages.${pkgs.system}.default
       arduino-cli
       (writeShellScriptBin "doom" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs \"$@\"")
       (writeShellScriptBin "emacs-nox" "CHEMACS_PROFILE=vanilla exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
       (writeShellScriptBin "doom-nox" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
     ]
+    ++ (
+      if pkgs.system == "x86_64-linux"
+      then [
+        inputs.codex-cli-nix.packages.${pkgs.system}.default
+        inputs.opencode-flake.packages.${pkgs.system}.default
+      ]
+      else []
+    )
     ++ (
       if builtins.elem hostname ["h-tuf" "p-wsl"]
       then [
