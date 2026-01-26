@@ -8,8 +8,6 @@
   
   # Ensure we have some basic tools in the system profile
   environment.packages = with pkgs; [
-    vim
-    git
     openssh
   ];
 
