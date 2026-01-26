@@ -140,6 +140,36 @@
         ];
         home-manager-path = home-manager.outPath;
       };
+      h-fold42 = nix-on-droid.lib.nixOnDroidConfiguration {
+        pkgs = import nixpkgs {
+          system = "aarch64-linux";
+          overlays = [
+            (final: prev: {
+              # Add any overlays here if needed
+            })
+          ];
+          config.allowUnfree = true;
+        };
+        modules = [
+          ./hosts/h-fold42/default.nix
+          {
+            _module.args = {
+              inherit inputs;
+              hostname = "h-fold42";
+            };
+          }
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = {
+              inherit inputs;
+              hostname = "h-fold42";
+            };
+            home-manager.config = import ./home/default.nix;
+          }
+        ];
+        home-manager-path = home-manager.outPath;
+      };
     };
 
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
