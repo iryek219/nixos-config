@@ -26,8 +26,8 @@
 
   # Android integration settings
   android-integration = {
-    termux-open = true;
-    termux-setup-storage = true;
-    termux-reload-settings = true;
+    termux-open.enable = true;
+    termux-setup-storage.enable = true;
+    termux-reload-settings.enable = true;
   };
 }
