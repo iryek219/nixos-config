@@ -34,6 +34,7 @@
 
       #julia
       rustup
+      rustlings
       nodejs_20 # pin version to avoid accidental upgrade
       bun
       exercism
