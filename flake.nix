@@ -26,6 +26,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/0.1";
   };
 
   outputs = {
@@ -84,7 +86,7 @@
         system = "x86_64-linux";
         wsl = true;
         hmUser = "hwan";
-        modules = [];
+        modules = [inputs.determinate.nixosModules.default];
       };
 
       oci-arm = mkSystem {
@@ -98,14 +100,14 @@
         hostname = "h-tuf";
         system = "x86_64-linux";
         hmUser = "hwan";
-        modules = [];
+        modules = [inputs.determinate.nixosModules.default];
       };
 
       h-pc = mkSystem {
         hostname = "h-pc";
         system = "x86_64-linux";
         hmUser = "hwan";
-        modules = [];
+        modules = [inputs.determinate.nixosModules.default];
       };
     };
 

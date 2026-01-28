@@ -48,6 +48,11 @@
       (writeShellScriptBin "doom-nox" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
     ]
     ++ (
+      if ! (builtins.elem hostname ["h-fold41" "h-fold42"])
+      then [fh]
+      else []
+    )
+    ++ (
       if pkgs.system == "x86_64-linux"
       then [
         inputs.codex-cli-nix.packages.${pkgs.system}.default
