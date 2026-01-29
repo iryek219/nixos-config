@@ -49,7 +49,10 @@
     ]
     ++ (
       if ! (builtins.elem hostname ["h-fold41" "h-fold42"])
-      then [fh]
+      then [
+        fh
+        telegram-desktop
+      ]
       else []
     )
     ++ (
