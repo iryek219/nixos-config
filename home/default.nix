@@ -161,6 +161,7 @@
   # --- SHELL ALIASES ---
   programs.bash = {
     enable = true;
+    enableCompletion = false;
     shellAliases = {
       # 프로필별 실행 명령어
 
