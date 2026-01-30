@@ -1,6 +1,6 @@
 I want to set up nix-moltbot on my machine (macOS or Linux).
 
-Repository: github:moltbot/nix-moltbot
+Repository: http://github:openclaw/nix-openclaw
 
 What nix-moltbot is:
 - Batteries-included Nix package for Moltbot (AI assistant gateway)
