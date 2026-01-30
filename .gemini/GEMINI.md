@@ -12,8 +12,10 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 *   **`hosts/`**: Host-specific configurations.
     *   `h-tuf`: Primary x86_64 workstation/laptop.
     *   `p-wsl`: WSL2 environment.
-    *   `oci-arm`: ARM64 Oracle Cloud instance.
+    *   `oci-arm`: ARM64 Oracle Cloud instance. Headless.
     *   `h-pc`: Secondary x86_64 machine.
+    *    h-fold41 : nix-droid on Android. Headless. systemd is not available.
+    *    h-fold42 : nix-droid on Android. Headless. systemd is not available.
 *   **`modules/`**: Shared NixOS modules.
     *   `common.nix`: Base configuration applied to all hosts (users, system packages, nix settings).
     *   `wsl.nix`: Specific settings for WSL environments.
@@ -79,5 +81,6 @@ nix-collect-garbage -d
 ## Notes for Gemini Agent
 
 *   **Read-First**: Always read `flake.nix` and `modules/common.nix` before making sweeping changes.
+*   **Respect Host Capability**: Some hosts are headless - 'oci-arm', 'h-fold41', and 'h-fold42'). Some don't have systemd - 'h-fold41' and 'h-fold42'. Respect each host's capabilities when modifying the config.
 *   **Safety**: When editing `secrets.yaml`, ensure you have the correct `sops` environment or ask the user to handle the encryption part if you cannot invoke the editor directly (usually `sops` opens `$EDITOR`).
 *   **Verification**: After editing `.nix` files, `nix fmt` (or `alejandra` if configured) is good practice, and `nixos-rebuild dry-build` can verify syntax without applying.
