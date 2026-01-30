@@ -25,15 +25,4 @@
       emoji = ["Noto Color Emoji"];
     };
   };
-
-  # Fix for moltbot activation script assuming /bin/* binaries exist
-  system.activationScripts.binLinkCoreutils = {
-    text = ''
-      mkdir -p /bin
-      for bin in ${pkgs.coreutils}/bin/*; do
-        ln -sf "$bin" "/bin/$(basename "$bin")"
-      done
-    '';
-    deps = [];
-  };
 }

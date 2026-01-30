@@ -8,7 +8,6 @@
   imports =
     [
       inputs.sops-nix.homeManagerModules.sops
-      inputs.nix-moltbot.homeManagerModules.moltbot
     ]
     ++ (
       if builtins.elem hostname ["h-tuf"]
@@ -36,6 +35,7 @@
       #julia
       rustup
       rustlings
+      nodejs_20 # pin version to avoid accidental upgrade
       bun
       exercism
       age
@@ -264,29 +264,4 @@
       export ZAI_API_KEY=$(cat "/run/secrets/api-keys/zai")
     fi
   '';
-
-  programs.moltbot =
-    if builtins.elem hostname ["h-tuf" "p-wsl"]
-    then {
-      documents = builtins.path {
-        path = /home/hwan/code/moltbot-local/documents;
-        name = "moltbot-docs";
-      };
-      instances.default = {
-        enable = true;
-        providers.telegram = {
-          enable = true;
-          botTokenFile = "${config.home.homeDirectory}/.secrets/moltbot/telegram-token";
-          allowFrom = [1078515864];
-          groups = {
-            "*" = {requireMention = true;};
-          };
-        };
-        providers.anthropic = {
-          apiKeyFile = "${config.home.homeDirectory}/.secrets/moltbot/anthropic-key";
-        };
-        plugins = [];
-      };
-    }
-    else {};
 }

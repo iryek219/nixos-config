@@ -21,11 +21,6 @@
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     opencode-flake.url = "github:aodhanhayter/opencode-flake";
 
-    nix-moltbot = {
-      url = "github:moltbot/nix-moltbot";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-on-droid = {
       url = "github:nix-community/nix-on-droid/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -66,9 +61,6 @@
 
             {
               nixpkgs.config.allowUnfree = true;
-              nixpkgs.overlays = [
-                inputs.nix-moltbot.overlays.default
-              ];
             }
 
             home-manager.nixosModules.home-manager
