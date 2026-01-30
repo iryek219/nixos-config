@@ -260,6 +260,9 @@
     if [ -f "/run/secrets/api-keys/google_cloud" ]; then
       export GOOGLE_CLOUD_PROJECT=$(cat "/run/secrets/api-keys/google_cloud")
     fi
+    if [ -f "/run/secrets/api-keys/anthropic" ]; then
+      export ANTHROPIC_API_KEY=$(cat "/run/secrets/api-keys/anthropic")
+    fi
     if [ -f "/run/secrets/api-keys/zai" ]; then
       export ZAI_API_KEY=$(cat "/run/secrets/api-keys/zai")
     fi
