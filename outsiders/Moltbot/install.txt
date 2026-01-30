@@ -16,9 +16,10 @@ What I need you to do:
 5. Set up secrets (bot token, Anthropic key) - plain files at ~/.secrets/ is fine
 6. Fill in the template placeholders and call /etc/nixos/rebuild.sh h-tuf
 7. Verify: service running, bot responds to messages
+8. Remember my NixOS config is shared by multiple machines including WSL2, Linux laptop & desktop, nix-on-droid on Android devices, and finally OCI cloud instance. So, if you need to touch on my NixOS config, make the changes only affect the hosts p-wsl and h-tuf.
 
 My setup:
-- OS: [Linux]
+- OS: [Linux on WSL2]
 - CPU: [x86_64]
 - System: [x86_64-linux]
 - Home Manager config name: [not applicable – using Home Manager as NixOS module]
