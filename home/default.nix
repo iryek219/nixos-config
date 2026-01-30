@@ -168,7 +168,6 @@
       ll = "ls -alh";
       l = "ls -l";
       glmcode = "ANTHROPIC_BASE_URL=https://api.z.ai/api/anthropic ANTHROPIC_AUTH_TOKEN=$(cat \"/run/secrets/api-keys/zai\") API_TIMEOUT_MS=3000000 claude --settings $HOME/.claude/settings-glm.json";
-      ccode = "ANTHROPIC_AUTH_TOKEN=$(cat \"/run/secrets/api-keys/anthropic\") claude";
     };
   };
 
@@ -248,9 +247,6 @@
     CARGO_HOME = "$HOME/.cargo";
     RUSTUP_HOME = "$HOME/.rustup";
     GEMINI_MODEL = "gemini-3-pro-preview";
-    #GEMINI_API_KEY = builtins.readFile "/run/secrets/api-keys/gemini";
-    #ANTHROPIC_API_KEY = builtins.readFile "/run/secrets/api-keys/anthropic";
-    #GOOGLE_CLOUD_PROJECT = builtins.readFile "/run/secrets/api-keys/google_cloud";
   };
 
   programs.bash.initExtra = ''
