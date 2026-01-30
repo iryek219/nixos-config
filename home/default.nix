@@ -262,5 +262,16 @@
     if [ -f "/run/secrets/api-keys/zai" ]; then
       export ZAI_API_KEY=$(cat "/run/secrets/api-keys/zai")
     fi
+
+    # Auto-start logic
+    if [[ $- == *i* ]] && [[ -z "$TMUX" ]]; then
+      ${if builtins.elem hostname ["h-fold41" "h-fold42"]
+        then "cd ~/.config/nix-on-droid 2>/dev/null || true"
+        else "cd ~/etc/nixos 2>/dev/null || cd /etc/nixos 2>/dev/null || true"}
+
+      if command -v tmux &> /dev/null; then
+        exec tmux
+      fi
+    fi
   '';
 }
