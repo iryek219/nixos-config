@@ -10,6 +10,8 @@
         "editor.renderWhitespace" = "all";
         "editor.tabSize" = 2;
         "editor.formatOnSave" = true;
+        "editor.fontFamily" = "JetBrainsMono Nerd Font";
+        "terminal.integrated.fontFamily" = "JetBrainsMono Nerd Font";
 
         "workbench.colorTheme" = "Dracula Theme";
       };
