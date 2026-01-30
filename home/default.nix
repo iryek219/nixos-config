@@ -264,7 +264,7 @@
     fi
 
     # Auto-start logic
-    if [[ $- == *i* ]] && [[ -z "$TMUX" ]]; then
+    if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
       ${if builtins.elem hostname ["h-fold41" "h-fold42"]
         then "cd ~/.config/nix-on-droid 2>/dev/null || true"
         else "cd ~/etc/nixos 2>/dev/null || cd /etc/nixos 2>/dev/null || true"}
