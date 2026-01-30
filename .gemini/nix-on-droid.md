@@ -1,6 +1,6 @@
 # Nix-on-Droid Integration
 
-This configuration enables [Nix-on-Droid](https://github.com/nix-community/nix-on-droid) on the Samsung Galaxy Fold-4 (`h-fold4`).
+This configuration enables [Nix-on-Droid](https://github.com/nix-community/nix-on-droid) on two Samsung Galaxy Fold-4 devices (`h-fold41`, `h-fold42`).
 
 ## Setup Details
 
