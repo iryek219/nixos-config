@@ -86,7 +86,7 @@
         system = "x86_64-linux";
         wsl = true;
         hmUser = "hwan";
-        modules = [inputs.determinate.nixosModules.default];
+        modules = [];
       };
 
       oci-arm = mkSystem {
