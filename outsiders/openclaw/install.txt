@@ -1,17 +1,17 @@
-I want to set up nix-moltbot on my machine (macOS or Linux).
+I want to set up nix-openclaw on my machine (macOS or Linux).
 
 Repository: http://github:openclaw/nix-openclaw
 
-What nix-moltbot is:
+What nix-openclaw is:
 - Batteries-included Nix package for Moltbot (AI assistant gateway)
 - Installs gateway + tools everywhere; macOS app only on macOS
 - Runs as a launchd service on macOS, systemd user service on Linux
 
 What I need you to do:
 1. Check if Determinate Nix is installed (if not, install it)
-2. Create a local flake at ~/code/moltbot-local using templates/agent-first/flake.nix
-3. Create a docs dir next to the config (e.g., ~/code/moltbot-local/documents) with AGENTS.md, SOUL.md, TOOLS.md
-   - If ~/.moltbot/workspace already has these files, adopt them into the documents dir first
+2. Create a local flake at ~/code/openclaw-local using templates/agent-first/flake.nix
+3. Create a docs dir next to the config (e.g., ~/code/openclaw-local/documents) with AGENTS.md, SOUL.md, TOOLS.md (optional: IDENTITY.md, USER.md, LORE.md, HEARTBEAT.md, PROMPTING-EXAMPLES.md)
+   - If ~/.openclaw/workspace already has these files, adopt them into the documents dir first (use copy/rsync that dereferences symlinks, e.g. `cp -L`)
 4. Help me create a Telegram bot (@BotFather) and get my chat ID (@userinfobot)
 5. Set up secrets (bot token, Anthropic key) - plain files at ~/.secrets/ is fine
 6. Fill in the template placeholders and call /etc/nixos/rebuild.sh h-tuf
