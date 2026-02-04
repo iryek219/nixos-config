@@ -43,4 +43,7 @@
       oracle.enable = true;
     };
   };
+
+  # Add WantedBy to enable auto-start on login
+  systemd.user.services.openclaw-gateway.Install.WantedBy = ["default.target"];
 }
