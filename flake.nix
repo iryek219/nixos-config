@@ -21,6 +21,12 @@
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     opencode-flake.url = "github:aodhanhayter/opencode-flake";
 
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     nix-on-droid = {
       url = "github:nix-community/nix-on-droid/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -48,6 +54,8 @@
       modules,
       wsl ? false,
       hmUser,
+      overlays ? [],
+      hmModules ? [],
     }:
       nixpkgs.lib.nixosSystem {
         inherit system;
@@ -61,6 +69,7 @@
 
             {
               nixpkgs.config.allowUnfree = true;
+              nixpkgs.overlays = overlays;
             }
 
             home-manager.nixosModules.home-manager
@@ -69,7 +78,9 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = {inherit inputs hostname;};
-              home-manager.users.${hmUser} = import ./home/default.nix;
+              home-manager.users.${hmUser} = {
+                imports = [./home/default.nix] ++ hmModules;
+              };
             }
           ]
           ++ modules
@@ -101,6 +112,8 @@
         system = "x86_64-linux";
         hmUser = "hwan";
         modules = [inputs.determinate.nixosModules.default];
+        overlays = [inputs.nix-openclaw.overlays.default];
+        hmModules = [./home/openclaw.nix];
       };
 
       h-pc = mkSystem {

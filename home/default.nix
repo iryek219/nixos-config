@@ -35,7 +35,6 @@
       #julia
       rustup
       rustlings
-      nodejs_20 # pin version to avoid accidental upgrade
       bun
       exercism
       age
@@ -75,6 +74,12 @@
     ++ (
       if hostname == "p-wsl"
       then [wslu]
+      else []
+    )
+    ++ (
+      # nodejs_20 excluded from h-tuf because openclaw provides nodejs
+      if hostname != "h-tuf"
+      then [nodejs_20]
       else []
     );
 
