@@ -69,6 +69,8 @@
 
   services.printing.enable = true;
 
+  services.logind.settings.Login.HandleLidSwitch = "ignore";
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;

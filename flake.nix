@@ -77,7 +77,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.backupFileExtension = "backup";
+              home-manager.backupFileExtension = "hm-backup";
               home-manager.extraSpecialArgs = {inherit inputs hostname;};
               home-manager.users.${hmUser} = {
                 imports = [./home/default.nix] ++ hmModules;
