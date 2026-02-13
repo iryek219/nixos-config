@@ -98,7 +98,9 @@
         system = "x86_64-linux";
         wsl = true;
         hmUser = "hwan";
-        modules = [];
+        modules = [inputs.determinate.nixosModules.default];
+        overlays = [inputs.nix-openclaw.overlays.default];
+        hmModules = [./home/openclaw.nix];
       };
 
       oci-arm = mkSystem {

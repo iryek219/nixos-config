@@ -77,8 +77,8 @@
       else []
     )
     ++ (
-      # nodejs_20 excluded from h-tuf because openclaw provides nodejs
-      if hostname != "h-tuf"
+      # nodejs_20 excluded from h-tuf and p-wsl because openclaw provides nodejs
+      if ! (builtins.elem hostname ["h-tuf" "p-wsl"])
       then [nodejs_20]
       else []
     );
