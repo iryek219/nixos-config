@@ -27,7 +27,7 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 ├── home/                        # Home Manager configurations
 │   ├── default.nix              # Main user config (shared)
 │   ├── vscode.nix               # VSCode config (h-tuf only)
-│   └── openclaw.nix             # OpenClaw config (h-tuf, p-wsl)
+│   └── openclaw.nix             # OpenClaw config (h-tuf only)
 ├── secrets/
 │   └── secrets.yaml             # SOPS-encrypted secrets
 ├── outsiders/                   # Development environments
@@ -67,9 +67,9 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 #### p-wsl (WSL2)
 - WSL module with USBIP enabled
 - NetworkManager/wireless disabled (incompatible)
-- OpenClaw integration: nix-openclaw overlay, Telegram bot gateway
 - CJK fonts (Noto Sans/Serif CJK KR)
 - Packages: arduino-ide, inkscape, audacity, wslu
+- **Note**: OpenClaw disabled due to WSL2 build issues (pnpm deps hang)
 
 #### oci-arm (Oracle Cloud)
 - Immutable users (`mutableUsers = false`)
@@ -94,7 +94,7 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 | `sops-nix` | Mic92/sops-nix | Secrets management |
 | `nix-on-droid` | nix-community/nix-on-droid (24.05) | Android support |
 | `determinate` | DeterminateSystems/determinate | Determinate Nix (h-tuf) |
-| `nix-openclaw` | github:openclaw/nix-openclaw | OpenClaw AI assistant (h-tuf, p-wsl) |
+| `nix-openclaw` | github:openclaw/nix-openclaw | OpenClaw AI assistant (h-tuf only) |
 | `codex-cli-nix` | sadjow/codex-cli-nix | Codex CLI (x86_64 only) |
 | `opencode-flake` | aodhanhayter/opencode-flake | Opencode tool (x86_64 only) |
 
@@ -127,7 +127,7 @@ Shared user configuration applied to most hosts.
 
 **Conditional behavior:**
 - VSCode config: h-tuf only
-- OpenClaw config: h-tuf, p-wsl
+- OpenClaw config: h-tuf only (p-wsl: disabled due to WSL2 build issues)
 - Desktop apps (telegram-desktop, fh): Excluded from h-fold41/h-fold42
 - x86_64-only packages: codex-cli-nix, opencode-flake
 - h-tuf/p-wsl specific: arduino-ide, inkscape, audacity
@@ -170,7 +170,7 @@ Shared user configuration applied to most hosts.
 - Theme: Dracula
 - Extensions: VIM, Nix, Python, Rust, Go, GitLens, etc.
 
-### home/openclaw.nix (h-tuf, p-wsl)
+### home/openclaw.nix (h-tuf only)
 OpenClaw AI assistant gateway configuration:
 - **Integration**: nix-openclaw homeManagerModule
 - **Documents**: `/home/hwan/code/openclaw-local/documents`

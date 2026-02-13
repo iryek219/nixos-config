@@ -99,8 +99,6 @@
         wsl = true;
         hmUser = "hwan";
         modules = [];
-        overlays = [inputs.nix-openclaw.overlays.default];
-        hmModules = [./home/openclaw.nix];
       };
 
       oci-arm = mkSystem {
