@@ -19,19 +19,22 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 │   ├── p-wsl/                   # WSL2 environment (x86_64, headless)
 │   ├── oci-arm/                 # Oracle Cloud ARM instance (aarch64, headless)
 │   ├── h-fold41/                # Android nix-on-droid (aarch64, no systemd)
-│   └── h-fold42/                # Android nix-on-droid (aarch64, no systemd)
+│   ├── h-fold42/                # Android nix-on-droid (aarch64, no systemd)
+│   └── h-pc/                    # (EMPTY - defined in flake.nix but not implemented)
 ├── modules/                     # Shared NixOS modules
 │   ├── common.nix               # Base config for all hosts
 │   └── wsl.nix                  # WSL-specific overrides
 ├── home/                        # Home Manager configurations
 │   ├── default.nix              # Main user config (shared)
-│   └── vscode.nix               # VSCode config (h-tuf only)
+│   ├── vscode.nix               # VSCode config (h-tuf only)
+│   └── openclaw.nix             # OpenClaw config (h-tuf, p-wsl)
 ├── secrets/
 │   └── secrets.yaml             # SOPS-encrypted secrets
 ├── outsiders/                   # Development environments
 │   ├── Python/flake.nix         # Python dev shell
 │   ├── Rust/                    # Rust dev environment
-│   └── Moltbot/                 # Moltbot setup notes
+│   ├── openclaw/install.txt     # OpenClaw setup instructions
+│   └── home/                    # Home directory experiments
 └── .claude/
     ├── CLAUDE.md                # This documentation
     └── nix-on-droid.md          # Nix-on-droid setup guide
@@ -54,13 +57,17 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 - UEFI boot with systemd-boot
 - GNOME desktop with GDM display manager
 - IBus with Hangul engine (Korean input)
+- Keyboard layout: kr/kr104
 - PipeWire audio with ALSA/Pulse support
+- Lid close behavior: ignores lid close (prevents sleep on lid close)
 - Determinate Nix module enabled
+- OpenClaw integration: nix-openclaw overlay, Telegram bot gateway
 - Packages: Anki, Gparted, Chrome, Okular, Zoom
 
 #### p-wsl (WSL2)
 - WSL module with USBIP enabled
 - NetworkManager/wireless disabled (incompatible)
+- OpenClaw integration: nix-openclaw overlay, Telegram bot gateway
 - CJK fonts (Noto Sans/Serif CJK KR)
 - Packages: arduino-ide, inkscape, audacity, wslu
 
@@ -87,6 +94,7 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 | `sops-nix` | Mic92/sops-nix | Secrets management |
 | `nix-on-droid` | nix-community/nix-on-droid (24.05) | Android support |
 | `determinate` | DeterminateSystems/determinate | Determinate Nix (h-tuf) |
+| `nix-openclaw` | github:openclaw/nix-openclaw | OpenClaw AI assistant (h-tuf, p-wsl) |
 | `codex-cli-nix` | sadjow/codex-cli-nix | Codex CLI (x86_64 only) |
 | `opencode-flake` | aodhanhayter/opencode-flake | Opencode tool (x86_64 only) |
 
@@ -114,14 +122,19 @@ WSL-specific overrides:
 ### home/default.nix
 Shared user configuration applied to most hosts.
 
+**Home Manager settings:**
+- Backup file extension: `hm-backup` (handles file conflicts on rebuild)
+
 **Conditional behavior:**
 - VSCode config: h-tuf only
+- OpenClaw config: h-tuf, p-wsl
 - Desktop apps (telegram-desktop, fh): Excluded from h-fold41/h-fold42
 - x86_64-only packages: codex-cli-nix, opencode-flake
 - h-tuf/p-wsl specific: arduino-ide, inkscape, audacity
+- nodejs_20: Excluded on h-tuf (OpenClaw provides its own Node.js)
 
 **Key packages:**
-- Development: git, gh, ripgrep, fd, nixfmt, python3, rustup, nodejs_20, bun
+- Development: git, gh, ripgrep, fd, nixfmt, python3, rustup, bun
 - AI tools: gemini-cli, claude-code
 - Editor: emacs30-pgtk with Chemacs2 (profiles: default, doom, vanilla)
 
@@ -130,12 +143,25 @@ Shared user configuration applied to most hosts.
 - **Starship**: Custom prompt (no newline, git branch styling)
 - **Vim**: Default editor (tabstop: 2, clipboard: unnamedplus, mouse)
 - **Tmux**: Plugins (catppuccin, resurrect, continuum), 100k history, mouse
-- **Bash**: Aliases (ec, ll, glmcode), auto-tmux on login (except VSCode/nix-on-droid)
+- **Bash**: Bash completion DISABLED (prevents progcomp errors), aliases (ec, ll, glmcode), auto-tmux on login (except VSCode/nix-on-droid)
 
 **Session variables:**
 - CARGO_HOME, RUSTUP_HOME: `~/.cargo`, `~/.rustup`
 - GEMINI_MODEL: `gemini-3-pro-preview`
 - API keys loaded from `/run/secrets/` at shell init
+
+**SSH config:**
+- oci-arm: 193.123.224.61 (user: hwan, key: ~/.ssh/oci-arm)
+
+**GLM model support:**
+- Custom Claude settings via `~/.claude/settings-glm.json`
+- Maps haiku → glm-4.5-air, sonnet → glm-4.7, opus → glm-4.7
+- Access via `glmcode` alias (uses ZAI API endpoint)
+
+**Exercism integration:**
+- SOPS template creates `~/.config/exercism/user.json`
+- Token from `sops.secrets.exercism-token`
+- Workspace: `~/learn/Exercism`
 
 ### home/vscode.nix (h-tuf only)
 - VIM mode with relative line numbers
@@ -143,6 +169,17 @@ Shared user configuration applied to most hosts.
 - Font: JetBrainsMono Nerd Font
 - Theme: Dracula
 - Extensions: VIM, Nix, Python, Rust, Go, GitLens, etc.
+
+### home/openclaw.nix (h-tuf, p-wsl)
+OpenClaw AI assistant gateway configuration:
+- **Integration**: nix-openclaw homeManagerModule
+- **Documents**: `/home/hwan/code/openclaw-local/documents`
+- **Plugins**: bundledPlugins (summarize, oracle)
+- **SOPS**: Anthropic API key via sops template
+- **Systemd service**: openclaw-gateway auto-starts on user login (WantedBy: default.target)
+- **Telegram bot**: Configured for remote access (bot token: `~/.secrets/telegram-bot-token`)
+- **Config**: Custom JSON at `~/.openclaw/my-config.json` (gateway auth token, Telegram settings)
+- **Environment**: ANTHROPIC_API_KEY from sops, custom config path via OPENCLAW_CONFIG_PATH
 
 ## Secrets
 
@@ -188,7 +225,7 @@ nix-collect-garbage -d
 # Verify syntax without applying
 nixos-rebuild dry-build --flake ".#<hostname>"
 
-# Format nix files
+# Format nix files (uses alejandra formatter)
 nix fmt
 ```
 
@@ -202,6 +239,23 @@ uv venv --python $(which python)
 
 ### Rust (outsiders/Rust/)
 Uses Fenix for stable Rust toolchain with cargo-deny, cargo-edit, cargo-watch, rust-analyzer.
+
+### OpenClaw (outsiders/openclaw/)
+Setup documentation in `install.txt`:
+1. Install Determinate Nix
+2. Create ~/code/openclaw-local flake with documents directory
+3. Create Telegram bot via @BotFather and get chat ID from @userinfobot
+4. Set up secrets (bot token at `~/.secrets/telegram-bot-token`, Anthropic API key via sops)
+5. Rebuild system configuration with `./rebuild.sh h-tuf`
+6. Verify: openclaw-gateway service running, bot responds to messages
+
+## Recent Changes
+
+**Latest commits:**
+- `75ba39c` (2026-02-13): Configure Anthropic API key via sops-nix for OpenClaw
+- `ab76607`: Prevent sleep on lid close (h-tuf), repair openclaw-gateway config
+- `ec60fff`: Add home-manager backupFileExtension ("hm-backup") for file conflicts
+- `bfa48d2`: Enable auto-start of openclaw-gateway systemd service
 
 ## Development Guidelines
 
@@ -223,5 +277,11 @@ Uses Fenix for stable Rust toolchain with cargo-deny, cargo-edit, cargo-watch, r
   - x86_64-only packages exist (check conditionals in home/default.nix)
 - **Architecture-aware**: Some packages are x86_64-only (codex-cli-nix, opencode-flake)
 - **Secrets Safety**: Cannot edit encrypted files directly; ask user to run `sops secrets/secrets.yaml`
-- **Verification**: Run `nix fmt` after editing .nix files; use `nixos-rebuild dry-build` to verify
-- **h-pc Note**: Defined in flake.nix but not implemented (no hosts/h-pc/ directory)
+- **Verification**: Run `nix fmt` (uses alejandra, not nixfmt) after editing .nix files; use `nixos-rebuild dry-build` to verify
+- **h-pc Note**: Defined in flake.nix but not implemented (no hosts/h-pc/ directory exists)
+- **h-tuf Specifics**:
+  - Has OpenClaw integration with Telegram bot (openclaw-gateway service)
+  - GLM models available via custom settings file (`~/.claude/settings-glm.json`)
+  - Node.js excluded (OpenClaw provides its own)
+  - Lid close ignored (prevents sleep)
+- **Home Manager**: Uses "hm-backup" extension for file conflict handling
