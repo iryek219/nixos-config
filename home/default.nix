@@ -42,6 +42,11 @@
       gemini-cli
       claude-code
       arduino-cli
+
+      # hledger - plain text accounting
+      hledger
+      hledger-ui
+      hledger-web
       (writeShellScriptBin "doom" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs \"$@\"")
       (writeShellScriptBin "emacs-nox" "CHEMACS_PROFILE=vanilla exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
       (writeShellScriptBin "doom-nox" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
