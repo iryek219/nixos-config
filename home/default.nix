@@ -162,6 +162,8 @@
     ];
     extraConfig = ''
       set -g mouse on
+      set -g automatic-rename off
+      set -g allow-rename off
       # bind  c  new-window      -c "#{pane_current_path}"
       # bind  %  split-window -h -c "#{pane_current_path}"
       # bind '"' split-window -v -c "#{pane_current_path}"
