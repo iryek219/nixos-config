@@ -197,6 +197,7 @@
   # Chemacs2 installation
   home.file.".emacs.d".source = "${pkgs.chemacs2}/share/site-lisp/chemacs2";
 
+  # No escape sequence with arrow keys in Guile repl
   home.file.".guile".text = ''
     (use-modules (ice-9 readline))
     (activate-readline)
