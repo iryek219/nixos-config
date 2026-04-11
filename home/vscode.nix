@@ -22,6 +22,7 @@
         mhutchie.git-graph # Git visualization
         eamodio.gitlens # Git Super-charged
         yzhang.markdown-all-in-one
+        tomoki1207.pdf
 
         ms-python.python
         ms-python.vscode-pylance
