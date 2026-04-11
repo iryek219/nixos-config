@@ -12,6 +12,7 @@
         "editor.formatOnSave" = true;
         "editor.fontFamily" = "JetBrainsMono Nerd Font";
         "terminal.integrated.fontFamily" = "JetBrainsMono Nerd Font";
+        "terminal.integrated.shellIntegration.enabled" = false;
 
         "workbench.colorTheme" = "Dracula Theme";
       };
