@@ -284,7 +284,7 @@
         else "cd ~/etc/nixos 2>/dev/null || cd /etc/nixos 2>/dev/null || true"}
 
       if command -v tmux &> /dev/null; then
-        exec tmux
+        tmux new-session -A -s main
       fi
     fi
   '';
