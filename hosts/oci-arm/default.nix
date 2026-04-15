@@ -85,7 +85,7 @@ in {
       sslCertificateKey = "/etc/ssl/private/cloudflare-ggumgrim.key";
 
       locations."/" = {
-        proxyPass = "http://127.0.0.1:8000";
+        proxyPass = "http://127.0.0.1:5173";
         proxyWebsockets = true;
       };
     };
