@@ -117,6 +117,7 @@ in {
     description = "StockEye Frontend";
     wantedBy = [ "multi-user.target" ];
     after = [ "network.target" ];
+    path = [ pkgs.bash pkgs.nodejs_20 ];
     serviceConfig = {
       Type = "simple";
       User = "hwan";
