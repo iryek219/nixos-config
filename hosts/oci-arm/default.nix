@@ -56,7 +56,81 @@ in {
   ];
 
   environment.systemPackages = with pkgs; [
+    uv
+    nodejs_22
+    pnpm
   ];
+
+  # --- PostgreSQL 16 + TimescaleDB ---
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql_16.withPackages (p: [ p.timescaledb ]);
+    settings.shared_preload_libraries = "timescaledb";
+    ensureDatabases = [ "stockeye" ];
+    ensureUsers = [
+      {
+        name = "stockeye";
+        ensureDBOwnership = true;
+      }
+    ];
+    # Trust local connections so the app can connect with password from .env
+    authentication = pkgs.lib.mkOverride 10 ''
+      local all all trust
+      host  all all 127.0.0.1/32 trust
+      host  all all ::1/128      trust
+    '';
+  };
+
+  # Set the stockeye user password after PostgreSQL starts
+  systemd.services.postgresql.postStart = pkgs.lib.mkAfter ''
+    $PSQL -c "ALTER USER stockeye WITH PASSWORD 'stockeye_dev';"
+  '';
+
+  # --- Redis ---
+  services.redis.servers.stockeye = {
+    enable = true;
+    port = 6379;
+  };
+
+  # --- StockEye Backend (FastAPI on :8000) ---
+  systemd.services.stockeye-backend = {
+    description = "StockEye Backend";
+    wantedBy = [ "multi-user.target" ];
+    after = [
+      "network.target"
+      "postgresql.service"
+      "redis-stockeye.service"
+    ];
+    requires = [
+      "postgresql.service"
+      "redis-stockeye.service"
+    ];
+    serviceConfig = {
+      Type = "simple";
+      User = "hwan";
+      WorkingDirectory = "/home/hwan/dev/stockeye2/backend";
+      EnvironmentFile = "/home/hwan/dev/stockeye2/.env";
+      Environment = "PYTHONPATH=.";
+      ExecStart = "${pkgs.uv}/bin/uv run uvicorn app.main:app --host 0.0.0.0 --port 8000";
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+  };
+
+  # --- StockEye Frontend (Vite on :5173) ---
+  systemd.services.stockeye-frontend = {
+    description = "StockEye Frontend";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
+    serviceConfig = {
+      Type = "simple";
+      User = "hwan";
+      WorkingDirectory = "/home/hwan/dev/stockeye2/frontend";
+      ExecStart = "${pkgs.pnpm}/bin/pnpm dev";
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+  };
 
   # Enable the OpenSSH daemon.
   services.openssh = {
