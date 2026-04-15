@@ -70,8 +70,29 @@ in {
   # Disable autologin.
   services.getty.autologinUser = null;
 
+  services.nginx = {
+    enable = true;
+
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+
+    virtualHosts."ggumgrim.kr" = {
+      forceSSL = true;
+
+      sslCertificate = "/etc/ssl/certs/cloudflare-ggumgrim.pem";
+      sslCertificateKey = "/etc/ssl/private/cloudflare-ggumgrim.key";
+
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:8000";
+        proxyWebsockets = true;
+      };
+    };
+  };
+
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [22];
+  networking.firewall.allowedTCPPorts = [22 80 443];
   # networking.firewall.allowedUDPPorts = [ ... ];
 
   # Disable documentation for minimal install.
