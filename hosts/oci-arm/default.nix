@@ -81,11 +81,6 @@ in {
     '';
   };
 
-  # Set the stockeye user password after PostgreSQL starts
-  systemd.services.postgresql.postStart = pkgs.lib.mkAfter ''
-    $PSQL -c "ALTER USER stockeye WITH PASSWORD 'stockeye_dev';"
-  '';
-
   # --- Redis ---
   services.redis.servers.stockeye = {
     enable = true;
