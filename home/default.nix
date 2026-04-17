@@ -22,6 +22,10 @@
       gh
       ripgrep
       fd
+      psmisc    # This provides 'fuser'
+      lsof
+
+
       guile
       nerd-fonts.jetbrains-mono # font for emacs in WSL2
       adwaita-icon-theme # for emacs cursor in WSL2
