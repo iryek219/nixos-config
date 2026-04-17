@@ -148,11 +148,11 @@ in {
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
 
-    virtualHosts."ggumgrim.kr" = {
+    virtualHosts."recallodyssey.com" = {
       forceSSL = true;
 
-      sslCertificate = "/etc/ssl/certs/cloudflare-ggumgrim.pem";
-      sslCertificateKey = "/etc/ssl/private/cloudflare-ggumgrim.key";
+      sslCertificate = "/etc/ssl/certs/recallodyssey.pem";
+      sslCertificateKey = "/etc/ssl/private/recallodyssey.key";
 
       locations."/" = {
         proxyPass = "http://127.0.0.1:5173";
