@@ -81,11 +81,6 @@
       else []
     )
     ++ (
-      if hostname == "p-wsl"
-      then [wslu]
-      else []
-    )
-    ++ (
       # nodejs_20 excluded from h-tuf and p-wsl because openclaw provides nodejs
       if ! (builtins.elem hostname ["h-tuf" "p-wsl"])
       then [nodejs_20]
