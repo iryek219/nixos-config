@@ -21,12 +21,6 @@
     codex-cli-nix.url = "github:sadjow/codex-cli-nix";
     opencode-flake.url = "github:aodhanhayter/opencode-flake";
 
-    nix-openclaw = {
-      url = "github:openclaw/nix-openclaw";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
-
     nix-on-droid = {
       url = "github:nix-community/nix-on-droid/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -99,8 +93,6 @@
         wsl = true;
         hmUser = "hwan";
         modules = [inputs.determinate.nixosModules.default];
-        overlays = [inputs.nix-openclaw.overlays.default];
-        hmModules = [./home/openclaw.nix];
       };
 
       oci-arm = mkSystem {
@@ -115,8 +107,6 @@
         system = "x86_64-linux";
         hmUser = "hwan";
         modules = [inputs.determinate.nixosModules.default];
-        overlays = [inputs.nix-openclaw.overlays.default];
-        hmModules = [./home/openclaw.nix];
       };
 
       h-pc = mkSystem {

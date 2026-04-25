@@ -36,6 +36,8 @@
       pyright # python LSP server
       nixfmt # Nix formatter
 
+      nodejs_20
+
       #julia
       rustup
       rustlings
@@ -78,12 +80,6 @@
         inkscape
         audacity
       ]
-      else []
-    )
-    ++ (
-      # nodejs_20 excluded from h-tuf and p-wsl because openclaw provides nodejs
-      if ! (builtins.elem hostname ["h-tuf" "p-wsl"])
-      then [nodejs_20]
       else []
     );
 
