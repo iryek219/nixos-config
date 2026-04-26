@@ -15,8 +15,8 @@
   # 8384 : Web UI (Local Access Only by Default)
   # 22000 : Transfer Port (TCP/UDP)
   # 21027 : Local Discovery (UDP)
-  networking.firewall.allowedTCPPorts = [ 8384 22000 ];
-  networking.firewall.allowedUDPPorts = [ 22000 21027 ];
+  networking.firewall.allowedTCPPorts = [8384 22000];
+  networking.firewall.allowedUDPPorts = [22000 21027];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -42,6 +42,8 @@
     google-chrome
     kdePackages.okular
     zoom-us
+    ffmpeg-full
+    yt-dlp
     dejavu_fonts
     noto-fonts
     noto-fonts-cjk-sans
@@ -72,17 +74,18 @@
     #dataDir = "/home/hwan/다운로드/Docs";    # Default shared folder location
     #configDir = "/home/hwan/.config/syncthing";   # Where config.xml lives
 
-    overrideDevices = true;     # Nix will manage devices
-    overrideFolders = true;     # Nix will manage folders
+    overrideDevices = true; # Nix will manage devices
+    overrideFolders = true; # Nix will manage folders
     settings = {
       devices = {
-        "fold4-lcd1" = { id = "NOHZFTD-EBP4YNN-QH72HZM-VWM3N37-GKKQ2S2-CHJMITW-LOQ6MD5-BW3EFQQ"; };
-        "fold4-lcd2" = { id = "KD7WOZH-4NSG73R-2CPN354-TDZLBIV-7V4JMHP-FZ4EGTA-CAF2TMF-D5U5PAN"; };
+        "fold4-lcd1" = {id = "NOHZFTD-EBP4YNN-QH72HZM-VWM3N37-GKKQ2S2-CHJMITW-LOQ6MD5-BW3EFQQ";};
+        "fold4-lcd2" = {id = "KD7WOZH-4NSG73R-2CPN354-TDZLBIV-7V4JMHP-FZ4EGTA-CAF2TMF-D5U5PAN";};
       };
       folders = {
-        "hwan-docs" = {        # The ID of the folder (must match across devices)
+        "hwan-docs" = {
+          # The ID of the folder (must match across devices)
           path = "/home/hwan/다운로드/Docs";
-          devices = [ "fold4-lcd1" "fold4-lcd2" ]; # Share with these
+          devices = ["fold4-lcd1" "fold4-lcd2"]; # Share with these
           versioning = {
             type = "simple";
             params.keep = "10";

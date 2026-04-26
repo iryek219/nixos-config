@@ -90,8 +90,6 @@ in {
       sqlite.dev
       zlib
       zlib.dev
-      ffmpeg-full
-      yt-dlp
     ];
 
     environment.variables = {
