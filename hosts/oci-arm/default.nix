@@ -9,6 +9,7 @@ in {
   imports = [
     ./hardware-configuration.nix
     ./disk-config.nix
+    ../../modules/oci-containers.nix
   ];
 
   system.adminUser = "hwan";

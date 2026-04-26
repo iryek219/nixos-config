@@ -5,6 +5,7 @@
 }: {
   imports = [
     ./hardware-configuration.nix
+    ../../modules/oci-containers.nix
   ];
 
   system.stateVersion = "25.05";
