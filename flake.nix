@@ -27,6 +27,11 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/0.1";
   };
 
@@ -99,7 +104,7 @@
         hostname = "oci-arm";
         system = "aarch64-linux";
         hmUser = "hwan";
-        modules = [];
+        modules = [inputs.disko.nixosModules.disko];
       };
 
       h-tuf = mkSystem {

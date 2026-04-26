@@ -8,7 +8,6 @@
 in {
   imports = [
     ./hardware-configuration.nix
-    "${builtins.fetchTarball "https://github.com/nix-community/disko/archive/v1.11.0.tar.gz"}/module.nix"
     ./disk-config.nix
   ];
 
@@ -64,9 +63,9 @@ in {
   # --- PostgreSQL 16 + TimescaleDB ---
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql_16.withPackages (p: [ p.timescaledb ]);
+    package = pkgs.postgresql_16.withPackages (p: [p.timescaledb]);
     settings.shared_preload_libraries = "timescaledb";
-    ensureDatabases = [ "stockeye" ];
+    ensureDatabases = ["stockeye"];
     ensureUsers = [
       {
         name = "stockeye";
@@ -90,7 +89,7 @@ in {
   # --- StockEye Backend (FastAPI on :8000) ---
   systemd.services.stockeye-backend = {
     description = "StockEye Backend";
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
     after = [
       "network.target"
       "postgresql.service"
@@ -115,9 +114,9 @@ in {
   # --- StockEye Frontend (Vite on :5173) ---
   systemd.services.stockeye-frontend = {
     description = "StockEye Frontend";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
-    path = [ pkgs.bash pkgs.nodejs_20 ];
+    wantedBy = ["multi-user.target"];
+    after = ["network.target"];
+    path = [pkgs.bash pkgs.nodejs_20];
     serviceConfig = {
       Type = "simple";
       User = "hwan";
