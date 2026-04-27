@@ -171,7 +171,8 @@ in {
       sslCertificateKey = "/etc/ssl/private/recallodyssey.key";
 
       locations."/" = {
-        proxyPass = "http://127.0.0.1:5173";
+        #proxyPass = "http://127.0.0.1:5173"; # stockeye
+        proxyPass = "http://127.0.0.1:3000";  # recall odyssey
         proxyWebsockets = true;
       };
     };
