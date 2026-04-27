@@ -33,6 +33,10 @@ in {
     options = ["defaults" "nofail"];
   };
 
+  systemd.tmpfiles.rules = [
+    "d /mnt/data 0755 hwan users -"
+  ];
+
   networking.hostName = vars.hostname;
   networking.networkmanager.enable = true;
 
