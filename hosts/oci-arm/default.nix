@@ -105,7 +105,10 @@ in {
       User = "hwan";
       WorkingDirectory = "/home/hwan/dev/stockeye2/backend";
       EnvironmentFile = "/home/hwan/dev/stockeye2/.env";
-      Environment = "PYTHONPATH=.";
+      Environment = [
+        "PYTHONPATH=."
+        "LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib"
+      ];
       ExecStart = "${pkgs.uv}/bin/uv run uvicorn app.main:app --host 0.0.0.0 --port 8000";
       Restart = "on-failure";
       RestartSec = "10s";
