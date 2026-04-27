@@ -37,6 +37,9 @@ in {
     "d /mnt/data 0755 hwan users -"
   ];
 
+  virtualisation.docker.daemon.settings.data-root = "/mnt/data/docker";
+  systemd.services.docker.unitConfig.RequiresMountsFor = "/mnt/data";
+
   networking.hostName = vars.hostname;
   networking.networkmanager.enable = true;
 
