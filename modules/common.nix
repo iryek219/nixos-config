@@ -79,6 +79,7 @@ in {
       unzip
       wget
       curl
+      dnsutils
       gcc
       clang
       gnumake
