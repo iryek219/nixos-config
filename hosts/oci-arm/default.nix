@@ -122,7 +122,7 @@ in {
         "PYTHONPATH=."
         "LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib"
       ];
-      ExecStart = "${pkgs.uv}/bin/uv run uvicorn app.main:app --host 0.0.0.0 --port 8000";
+      ExecStart = "${pkgs.uv}/bin/uv run uvicorn app.main:app --host 0.0.0.0 --port 8006";
       Restart = "on-failure";
       RestartSec = "10s";
     };
@@ -157,7 +157,7 @@ in {
   services.getty.autologinUser = null;
 
   services.nginx = {
-    enable = true;
+    enable = false;
 
     recommendedProxySettings = true;
     recommendedTlsSettings = true;

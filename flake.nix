@@ -33,6 +33,8 @@
     };
 
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/0.1";
+
+    windmill.url = "path:/mnt/data/team-odyssey/infra/nixos/windmill"; # or git+ssh as appropriate
   };
 
   outputs = {
@@ -43,6 +45,7 @@
     sops-nix,
     codex-cli-nix,
     nix-on-droid,
+    windmill,
     ...
   } @ inputs: let
     forAllSystems = nixpkgs.lib.genAttrs ["x86_64-linux" "aarch64-linux"];
@@ -84,6 +87,21 @@
             }
           ]
           ++ modules
+          ++ (
+            if hostname == "oci-arm"
+            then
+              [
+                 windmill.nixosModules.windmill
+                 {
+                   services.windmillStack = {
+                     enable = true;
+                     domain = "windmill.recallodyssey.com";
+                     environmentFile = "/run/keys/windmill.env";
+                   };
+                 }
+              ]
+            else []
+          )
           ++ (
             if wsl
             then [nixos-wsl.nixosModules.default ./modules/wsl.nix]
