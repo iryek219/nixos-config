@@ -27,6 +27,12 @@ in {
 
   systemd.targets.multi-user.enable = true;
 
+  fileSystems."/mnt/data" = {
+    device = "/dev/disk/by-uuid/a807f76b-afbb-4cc3-9391-e135033ff165";
+    fsType = "ext4";
+    options = ["defaults" "nofail"];
+  };
+
   networking.hostName = vars.hostname;
   networking.networkmanager.enable = true;
 
