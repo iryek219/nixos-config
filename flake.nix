@@ -97,6 +97,8 @@
                      enable = true;
                      domain = "windmill.recallodyssey.com";
                      environmentFile = "/run/keys/windmill.env";
+                     tlsCertFile = "/etc/ssl/certs/recallodyssey.pem";
+                     tlsKeyFile = "/etc/ssl/private/recallodyssey.key";
                    };
                  }
               ]
