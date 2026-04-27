@@ -35,6 +35,7 @@
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/0.1";
 
     windmill.url = "path:/mnt/data/team-odyssey/infra/nixos/windmill"; # or git+ssh as appropriate
+    windmill-drill.url = "path:/home/hwan/dev/team-odyssey/infra/nixos/windmill"; # or git+ssh as appropriate
   };
 
   outputs = {
@@ -99,6 +100,21 @@
                      environmentFile = "/run/keys/windmill.env";
                      tlsCertFile = "/etc/ssl/certs/recallodyssey.pem";
                      tlsKeyFile = "/etc/ssl/private/recallodyssey.key";
+                   };
+                 }
+              ]
+            else []
+          )
+          ++ (
+            if hostname == "h-tuf"
+            then
+              [
+                 inputs.windmill-drill.nixosModules.windmill
+                 {
+                   services.windmillStack = {
+                     enable = true;
+                     domain = "drill.local";
+                     environmentFile = "/run/keys/windmill.env";
                    };
                  }
               ]
