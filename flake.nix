@@ -107,6 +107,13 @@
                        retentionDays = 30;
                        credentialsFile = "/run/keys/windmill-backups.env";
                      };
+                     auditMirror = {
+                       bucket = "recall-odyssey-backups";
+                       endpoint = "https://s3.us-west-004.backblazeb2.com";
+                       prefix = "audit/";
+                       retentionDays = 30;
+                       credentialsFile = "/run/keys/windmill-audit-mirror.env";
+                     };
                    };
                  }
               ]
