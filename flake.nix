@@ -100,6 +100,13 @@
                      environmentFile = "/run/keys/windmill.env";
                      tlsCertFile = "/etc/ssl/certs/recallodyssey.pem";
                      tlsKeyFile = "/etc/ssl/private/recallodyssey.key";
+                     backupS3 = {
+                       bucket = "recall-odyssey-backups";
+                       endpoint = "https://s3.us-west-004.backblazeb2.com";
+                       prefix = "db/";
+                       retentionDays = 30;
+                       credentialsFile = "/run/keys/windmill-backups.env";
+                     };
                    };
                  }
               ]
