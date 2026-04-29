@@ -605,8 +605,8 @@
         "nixpkgs": "nixpkgs_6"
       },
       "locked": {
-        "lastModified": 1777504469,
-        "narHash": "sha256-L8nxFemtOsjHJA2OM1f3IyNr/pi3x9cyQYRUf7IaA7Y=",
+        "lastModified": 1777505183,
+        "narHash": "sha256-wFvnfwmX13zcOq2dc7aOVwJDYIp60zFjcAJjSPtR1iw=",
         "path": "/mnt/data/team-odyssey/infra/nixos/windmill",
         "type": "path"
       },
