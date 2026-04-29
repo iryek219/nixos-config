@@ -72,6 +72,7 @@ in {
     uv
     nodejs_22
     pnpm
+    awscli2
   ];
 
   # --- PostgreSQL 16 + TimescaleDB ---
@@ -172,7 +173,7 @@ in {
 
       locations."/" = {
         #proxyPass = "http://127.0.0.1:5173"; # stockeye
-        proxyPass = "http://127.0.0.1:3000";  # recall odyssey
+        proxyPass = "http://127.0.0.1:3000"; # recall odyssey
         proxyWebsockets = true;
       };
     };
