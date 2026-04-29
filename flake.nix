@@ -35,7 +35,7 @@
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/0.1";
 
     windmill.url = "path:/mnt/data/team-odyssey/infra/nixos/windmill"; # or git+ssh as appropriate
-    windmill-drill.url = "path:/home/hwan/dev/team-odyssey/infra/nixos/windmill"; # or git+ssh as appropriate
+    #windmill-drill.url = "path:/home/hwan/dev/team-odyssey/infra/nixos/windmill"; # or git+ssh as appropriate
   };
 
   outputs = {
