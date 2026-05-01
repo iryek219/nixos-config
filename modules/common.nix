@@ -80,6 +80,7 @@ in {
       wget
       curl
       dnsutils
+      jq
       gcc
       clang
       gnumake
