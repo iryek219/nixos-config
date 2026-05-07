@@ -97,6 +97,8 @@
                    services.windmillStack = {
                      enable = true;
                      domain = "windmill.recallodyssey.com";
+                     workspaceUid = 1000;     # output of `id -u`
+                     workspaceGid = 100;      # NixOS users group
                      environmentFile = "/run/keys/windmill.env";
                      tlsCertFile = "/etc/ssl/certs/recallodyssey.pem";
                      tlsKeyFile = "/etc/ssl/private/recallodyssey.key";
