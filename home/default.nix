@@ -22,9 +22,8 @@
       gh
       ripgrep
       fd
-      psmisc    # This provides 'fuser'
+      psmisc # This provides 'fuser'
       lsof
-
 
       guile
       nerd-fonts.jetbrains-mono # font for emacs in WSL2
@@ -57,6 +56,7 @@
       then [
         fh
         telegram-desktop
+        (pkgs.lib.hiPrio rust-analyzer)
       ]
       else []
     )
@@ -98,11 +98,11 @@
 
   programs.starship = {
     enable = true;
-    
+
     # Optional: Customize the look (presets available online)
     settings = {
       add_newline = false; # Don't print a new line at the start
-      
+
       # Example: Tweaking the git module to show the branch in green
       git_branch = {
         style = "bold #ff9900";
@@ -277,9 +277,11 @@
 
     # Auto-start logic
     if [[ $- == *i* ]] && [[ -z "$TMUX" ]] && [[ "$TERM_PROGRAM" != "vscode" ]]; then
-      ${if builtins.elem hostname ["h-fold41" "h-fold42"]
-        then "cd ~/.config/nix-on-droid 2>/dev/null || true"
-        else "cd ~/etc/nixos 2>/dev/null || cd /etc/nixos 2>/dev/null || true"}
+      ${
+      if builtins.elem hostname ["h-fold41" "h-fold42"]
+      then "cd ~/.config/nix-on-droid 2>/dev/null || true"
+      else "cd ~/etc/nixos 2>/dev/null || cd /etc/nixos 2>/dev/null || true"
+    }
 
       if command -v tmux &> /dev/null; then
         tmux new-session -A -s main
