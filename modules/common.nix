@@ -81,6 +81,7 @@ in {
       curl
       dnsutils
       jq
+      protobuf
       gcc
       clang
       gnumake
