@@ -150,6 +150,7 @@ in {
     enable = true;
     settings = {
       PermitRootLogin = "no";
+      KbdInteractiveAuthentication = false;
       PasswordAuthentication = false;
     };
   };
