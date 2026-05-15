@@ -1,8 +1,13 @@
 keys:
   - &me age1qzav292phn4qwq0yx3u73q94kjedw8sg7rr34rpcrdg0gjulcdwstdzf9u
+  # Derived from /etc/ssh/ssh_host_ed25519_key.pub on oci-arm; lets
+  # sops-install-secrets decrypt at boot without depending on the
+  # operator's home directory being mounted.
+  - &oci-arm age1lt3q7ny82q8dsfxqlgm0y9c67xd7xnx40w8uqmk6zfxaqkzayyrqhd86pf
 creation_rules:
   - path_regex: secrets/.*\.yaml$
     key_groups:
       - age:
           - *me
+          - *oci-arm
 
