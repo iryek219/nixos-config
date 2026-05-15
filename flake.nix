@@ -93,13 +93,38 @@
             then
               [
                  windmill.nixosModules.windmill
-                 {
+                 ({ config, lib, ... }: {
+                   sops.secrets."windmill/env" = {
+                     path = "/run/keys/windmill.env";
+                     owner = "root";
+                     group = "root";
+                     mode = "0400";
+                     restartUnits = [
+                       "docker-windmill_db.service"
+                       "docker-windmill_server.service"
+                     ] ++ lib.genList
+                       (i: "docker-windmill_worker_${toString i}.service")
+                       config.services.windmillStack.workerCount;
+                   };
+                   sops.secrets."windmill/backups_env" = {
+                     path = "/run/keys/windmill-backups.env";
+                     owner = "root";
+                     group = "root";
+                     mode = "0400";
+                   };
+                   sops.secrets."windmill/audit_mirror_env" = {
+                     path = "/run/keys/windmill-audit-mirror.env";
+                     owner = "root";
+                     group = "root";
+                     mode = "0400";
+                   };
+
                    services.windmillStack = {
                      enable = true;
                      domain = "windmill.recallodyssey.com";
                      workspaceUid = 1000;     # output of `id -u`
                      workspaceGid = 100;      # NixOS users group
-                     environmentFile = "/run/keys/windmill.env";
+                     environmentFile = config.sops.secrets."windmill/env".path;
                      tlsCertFile = "/etc/ssl/certs/recallodyssey.pem";
                      tlsKeyFile = "/etc/ssl/private/recallodyssey.key";
                      backupS3 = {
@@ -107,17 +132,17 @@
                        endpoint = "https://s3.us-west-004.backblazeb2.com";
                        prefix = "db/";
                        retentionDays = 30;
-                       credentialsFile = "/run/keys/windmill-backups.env";
+                       credentialsFile = config.sops.secrets."windmill/backups_env".path;
                      };
                      auditMirror = {
                        bucket = "recall-odyssey-backups";
                        endpoint = "https://s3.us-west-004.backblazeb2.com";
                        prefix = "audit/";
                        retentionDays = 30;
-                       credentialsFile = "/run/keys/windmill-audit-mirror.env";
+                       credentialsFile = config.sops.secrets."windmill/audit_mirror_env".path;
                      };
                    };
-                 }
+                 })
               ]
             else []
           )
