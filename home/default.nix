@@ -55,7 +55,6 @@
       if ! (builtins.elem hostname ["h-fold41" "h-fold42"])
       then [
         fh
-        telegram-desktop
         (pkgs.lib.hiPrio rust-analyzer)
       ]
       else []
@@ -85,6 +84,7 @@
         arduino-ide
         inkscape
         audacity
+        telegram-desktop
       ]
       else []
     );
