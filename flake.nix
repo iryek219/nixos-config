@@ -184,6 +184,14 @@
         modules = [inputs.disko.nixosModules.disko];
       };
 
+      h-nitro = mkSystem {
+        hostname = "h-nitro";
+        system = "x86_64-linux";
+        wsl = true;
+        hmUser = "hwan";
+        modules = [inputs.determinate.nixosModules.default];
+      };
+
       h-tuf = mkSystem {
         hostname = "h-tuf";
         system = "x86_64-linux";

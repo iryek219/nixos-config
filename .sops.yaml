@@ -4,10 +4,12 @@ keys:
   # sops-install-secrets decrypt at boot without depending on the
   # operator's home directory being mounted.
   - &oci-arm age1lt3q7ny82q8dsfxqlgm0y9c67xd7xnx40w8uqmk6zfxaqkzayyrqhd86pf
+  - &h-nitro age1fkcq6kcwu2sqlum7ftscd5h26jsh5h0zaurmnpm0q7pg420wlq0q90g3m6
 creation_rules:
   - path_regex: secrets/.*\.yaml$
     key_groups:
       - age:
           - *me
           - *oci-arm
+          - *h-nitro
 

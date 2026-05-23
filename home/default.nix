@@ -78,7 +78,7 @@
       else []
     )
     ++ (
-      if builtins.elem hostname ["h-tuf" "p-wsl"]
+      if builtins.elem hostname ["h-tuf" "p-wsl" "h-nitro"]
       then [
         arduino-cli
         arduino-ide
