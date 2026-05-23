@@ -23,8 +23,8 @@ in {
   config = {
     nix.settings = {
       experimental-features = ["nix-command" "flakes"];
-      # 버퍼를 128MB(또는 더 크게 256MB)로 늘립니다. 단위는 바이트입니다.
-      download-buffer-size = 256 * 1024 * 1024;
+      # 버퍼를 128MB(또는 더 크게 512MB)로 늘립니다. 단위는 바이트입니다.
+      download-buffer-size = 512 * 1024 * 1024;
     };
 
     nix.gc = {
