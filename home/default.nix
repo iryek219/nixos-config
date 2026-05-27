@@ -60,16 +60,6 @@
       else []
     )
     ++ (
-      if ! (builtins.elem hostname ["oci-arm"])
-      then [
-        # hledger - plain text accounting
-        hledger
-        hledger-ui
-        hledger-web
-      ]
-      else []
-    )
-    ++ (
       if pkgs.system == "x86_64-linux"
       then [
         inputs.codex-cli-nix.packages.${pkgs.system}.default
