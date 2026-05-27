@@ -36,8 +36,8 @@ in {
     nixpkgs.config.allowUnfree = true;
 
     # Ensure the Nixpkgs from your flake input can be found via the traditional <nixpkgs> path
-    #nix.nixPath = [ "nixpkgs=${inputs.nixpkgs.outPath}" ];
-    nix.nixPath = [];
+    # keep nix.nixPath pointed at the flake's nixpkgs even on a fully-flake-driven system — it's a cheap compatibility shim for third-party tooling that still speaks channel-Nix.
+    nix.nixPath = ["nixpkgs=${inputs.nixpkgs.outPath}"];
 
     # This makes your flake inputs available in the registry for new-style commands
     # like `nix build nixpkgs#hello` without explicitly passing the flake input.
