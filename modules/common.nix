@@ -61,6 +61,11 @@ in {
 
     environment.sessionVariables.LD_LIBRARY_PATH = inputs.nixpkgs.lib.makeLibraryPath uniqueLibs;
 
+    environment.sessionVariables.PKG_CONFIG_PATH = lib.concatStringsSep ":" [
+      "/run/current-system/sw/lib/pkgconfig"
+      "/run/current-system/sw/share/pkgconfig"
+    ];
+
     networking.networkmanager.enable = true;
 
     i18n.defaultLocale = "ko_KR.UTF-8";
