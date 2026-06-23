@@ -20,6 +20,6 @@ echo
 echo "sudo nixos-rebuild switch --flake .#${HOST} --impure"
 echo
 
-NIXPKGS_ALLOW_INSECURE=1
+export NIXPKGS_ALLOW_INSECURE=1
 
-sudo nixos-rebuild switch --flake ".#${HOST}" --impure
+sudo --preserve-env=NIXPKGS_ALLOW_INSECURE nixos-rebuild switch --flake ".#${HOST}" --impure

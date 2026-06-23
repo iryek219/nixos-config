@@ -35,7 +35,7 @@
       pyright # python LSP server
       nixfmt # Nix formatter
 
-      nodejs_20
+      nodejs
 
       #julia
       rustup
