@@ -20,4 +20,6 @@ echo
 echo "sudo nixos-rebuild switch --flake .#${HOST} --impure"
 echo
 
+NIXPKGS_ALLOW_INSECURE=1
+
 sudo nixos-rebuild switch --flake ".#${HOST}" --impure
