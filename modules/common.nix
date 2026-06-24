@@ -68,6 +68,13 @@ in {
 
     networking.networkmanager.enable = true;
 
+    # Incus container/VM manager (all NixOS hosts; nix-on-droid hosts don't import this module).
+    # Incus requires nftables rather than iptables.
+    virtualisation.incus.enable = true;
+    networking.nftables.enable = true;
+    # Allow hwan to manage Incus without root (merges with per-host extraGroups).
+    users.users.hwan.extraGroups = ["incus-admin"];
+
     i18n.defaultLocale = "ko_KR.UTF-8";
     i18n.supportedLocales = [
       "ko_KR.UTF-8/UTF-8"
