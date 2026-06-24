@@ -35,10 +35,53 @@ in {
 
   systemd.tmpfiles.rules = [
     "d /mnt/data 0755 hwan users -"
+    # Incus dir storage pool source (must exist and be empty before first init).
+    "d /mnt/data/incus 0711 root root -"
   ];
 
   virtualisation.docker.daemon.settings.data-root = "/mnt/data/docker";
   systemd.services.docker.unitConfig.RequiresMountsFor = "/mnt/data";
+
+  # Keep Incus instance/image storage on the roomy /mnt/data (sdb) instead of the
+  # tight root disk. Applied once by incus-preseed.service after incusd starts.
+  virtualisation.incus.preseed = {
+    storage_pools = [
+      {
+        name = "default";
+        driver = "dir";
+        config.source = "/mnt/data/incus";
+      }
+    ];
+    networks = [
+      {
+        name = "incusbr0";
+        type = "bridge";
+        config = {
+          "ipv4.address" = "auto";
+          "ipv6.address" = "none";
+        };
+      }
+    ];
+    profiles = [
+      {
+        name = "default";
+        devices = {
+          eth0 = {
+            name = "eth0";
+            type = "nic";
+            network = "incusbr0";
+          };
+          root = {
+            path = "/";
+            type = "disk";
+            pool = "default";
+          };
+        };
+      }
+    ];
+  };
+  # incusd (and thus preseed) must not start before /mnt/data is mounted.
+  systemd.services.incus.unitConfig.RequiresMountsFor = "/mnt/data";
 
   networking.hostName = vars.hostname;
   networking.networkmanager.enable = true;
