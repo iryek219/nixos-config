@@ -37,6 +37,9 @@ in {
     "d /mnt/data 0755 hwan users -"
     # Incus dir storage pool source (must exist and be empty before first init).
     "d /mnt/data/incus 0711 root root -"
+    # /bin/bash compat shim for third-party scripts with #!/bin/bash shebangs
+    # (e.g. Discourse's d/* dev scripts).
+    "L+ /bin/bash - - - - /run/current-system/sw/bin/bash"
   ];
 
   virtualisation.docker.daemon.settings.data-root = "/mnt/data/docker";
