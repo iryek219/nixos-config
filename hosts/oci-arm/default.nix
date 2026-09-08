@@ -2,9 +2,12 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   vars = import ./vars.nix;
+  # tailscale from the fresher nixpkgs input (see flake.nix).
+  tailscalePkg = inputs.nixpkgs-fresh.legacyPackages.${pkgs.stdenv.hostPlatform.system}.tailscale;
 in {
   imports = [
     ./hardware-configuration.nix
@@ -189,6 +192,49 @@ in {
       Restart = "on-failure";
       RestartSec = "10s";
     };
+  };
+
+  # --- Tailscale ---
+  # Private access to loopback-only dev services from the tailnet without
+  # republishing Docker ports. Login once with `sudo tailscale up`.
+  # Direct UDP (41641) is not opened in the firewall or the OCI security list,
+  # so peers connect via DERP relays; fine for a dev instance.
+  services.tailscale = {
+    enable = true;
+    package = tailscalePkg;
+  };
+
+  # Publish the Discourse dev container (Rails/Ember on :3000, mail catcher
+  # on :8025) on the tailnet as plain HTTP on the same ports:
+  #   http://oci-arm:3000  and  http://oci-arm:8025
+  # `tailscale serve` terminates inside tailscaled, so nothing is bound on
+  # 0.0.0.0 and no firewall port is opened. The config persists in tailscaled
+  # state; re-applying on boot keeps it declarative. Rails must allow the
+  # tailnet hostnames via RAILS_DEVELOPMENT_HOSTS (see d/boot_dev -e ...).
+  systemd.services.tailscale-serve-discourse = {
+    description = "Expose Discourse dev ports on the tailnet via tailscale serve";
+    wantedBy = ["multi-user.target"];
+    after = ["tailscaled.service"];
+    requires = ["tailscaled.service"];
+    path = [config.services.tailscale.package pkgs.jq];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    script = ''
+      # Serve config is only accepted once the node is logged in.
+      for _ in $(seq 1 60); do
+        state=$(tailscale status --json 2>/dev/null | jq -r .BackendState || true)
+        [ "$state" = "Running" ] && break
+        sleep 2
+      done
+      if [ "$state" != "Running" ]; then
+        echo "tailscale not logged in (state: ''${state:-unknown}); run 'sudo tailscale up' then restart this unit" >&2
+        exit 0
+      fi
+      tailscale serve --bg --http=3000 http://127.0.0.1:3000
+      tailscale serve --bg --http=8025 http://127.0.0.1:8025
+    '';
   };
 
   # Enable the OpenSSH daemon.
