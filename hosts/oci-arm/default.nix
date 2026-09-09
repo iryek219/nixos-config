@@ -181,7 +181,9 @@ in {
   # --- StockEye Frontend (Vite on :5173) ---
   systemd.services.stockeye-frontend = {
     description = "StockEye Frontend";
-    wantedBy = ["multi-user.target"];
+    # Disabled 2026-09-09: `pnpm dev` crash-loops (pnpm ENOENT). Unit stays
+    # defined for manual `systemctl start`; restore wantedBy to re-enable.
+    wantedBy = [];
     after = ["network.target"];
     path = [pkgs.bash pkgs.nodejs_20];
     serviceConfig = {
