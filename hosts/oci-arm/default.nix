@@ -185,7 +185,7 @@ in {
     # defined for manual `systemctl start`; restore wantedBy to re-enable.
     wantedBy = [];
     after = ["network.target"];
-    path = [pkgs.bash pkgs.nodejs_20];
+    path = [pkgs.bash pkgs.nodejs_22];
     serviceConfig = {
       Type = "simple";
       User = "hwan";

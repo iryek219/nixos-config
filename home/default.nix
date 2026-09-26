@@ -47,9 +47,9 @@
       gemini-cli
       claude-code
 
-      (writeShellScriptBin "doom" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs \"$@\"")
-      (writeShellScriptBin "emacs-nox" "CHEMACS_PROFILE=vanilla exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
-      (writeShellScriptBin "doom-nox" "CHEMACS_PROFILE=doom exec ${pkgs.emacs30-pgtk}/bin/emacs -nw \"$@\"")
+      (writeShellScriptBin "doom" "CHEMACS_PROFILE=doom exec ${pkgs.emacs-pgtk}/bin/emacs \"$@\"")
+      (writeShellScriptBin "emacs-nox" "CHEMACS_PROFILE=vanilla exec ${pkgs.emacs-pgtk}/bin/emacs -nw \"$@\"")
+      (writeShellScriptBin "doom-nox" "CHEMACS_PROFILE=doom exec ${pkgs.emacs-pgtk}/bin/emacs -nw \"$@\"")
     ]
     ++ (
       if ! (builtins.elem hostname ["h-fold41" "h-fold42"])
@@ -126,7 +126,7 @@
     #package = pkgs.emacs-nox;  # terminal
     # Doom Emacs 성능을 위해 native-comp 기능이 있는 버전 추천
     # nox를 원하면 pkgs.emacs30-nox 등을 써도 되지만, Doom은 기본 패키지를 더 권장
-    package = pkgs.emacs30-pgtk;
+    package = pkgs.emacs-pgtk;
     # 중요: extraConfig와 extraPackages는 모두 삭제
     # 설정 관리는 Chemacs2와 각 Emacs 프로필이 담당
   };

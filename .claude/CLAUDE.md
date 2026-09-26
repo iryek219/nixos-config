@@ -137,7 +137,7 @@ Shared user configuration applied to most hosts.
 **Key packages:**
 - Development: git, gh, ripgrep, fd, nixfmt, python3, rustup, bun
 - AI tools: gemini-cli, claude-code
-- Editor: emacs30-pgtk with Chemacs2 (profiles: default, doom, vanilla)
+- Editor: emacs-pgtk with Chemacs2 (profiles: default, doom, vanilla)
 
 **Programs configured:**
 - **Direnv**: nix-direnv enabled
