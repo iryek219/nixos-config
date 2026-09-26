@@ -192,6 +192,10 @@
   home.file.".guile".text = ''
     (use-modules (ice-9 readline))
     (activate-readline)
+
+    (define atom?
+      (lambda (x)
+        (and (not (pair? x)) (not (null? x)))))
   '';
 
   home.file.".ssh/config".text = ''
