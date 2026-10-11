@@ -1,53 +1,42 @@
 {
-  description = "Python dev environment";
+  description = "Python dev environment (uv)";
+
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }:
-    let
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-    in
-    {
-      devShells = forAllSystems (system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-          default = pkgs.mkShell {
-            # 1. We provide uv here
-            packages = [
-              pkgs.python312
-              pkgs.uv
-            ];
+  outputs = {
+    self,
+    nixpkgs,
+  }: let
+    supportedSystems = ["x86_64-linux" "aarch64-linux"];
+    forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+  in {
+    devShells = forAllSystems (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      default = pkgs.mkShell {
+        packages = with pkgs; [
+          # Default python3 is the one Hydra fully caches; pinning an older
+          # pythonNN here forces local builds on aarch64 (see microduck_rl).
+          python312
+          uv
+          ruff
+          basedpyright
+        ];
 
-            # 2. We expose necessary C libraries to the environment
-            # This fixes issues where 'pip build' fails to find headers
-            LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
-              pkgs.stdenv.cc.cc
-              pkgs.zlib
-              # Add other libs here if a specific python package needs them (e.g. pkgs.glib)
-            ];
+        # uv must reuse the Nix interpreter, never a downloaded one: wheels and
+        # stdenv.cc.cc need to come from the same nixpkgs.
+        UV_PYTHON_DOWNLOADS = "never";
+        UV_PYTHON_PREFERENCE = "only-system";
 
-            # 3. Environment variables to help tools play nice
-            shellHook = ''
-              # Optional: helpful message
-              echo $(uv --version)
-              echo "Python $(python --version)"
+        shellHook = ''
+          export UV_PYTHON="$(command -v python3)"
+          echo "python $(python3 --version | cut -d' ' -f2) | uv $(uv --version | cut -d' ' -f2) | ruff $(ruff --version | cut -d' ' -f2)"
+        '';
+      };
+    });
 
-              export UV_PYTHON_DOWNLOADS=never
-
-              echo 
-              echo "Important:"
-              echo "   UV venv should use the same python compiler as the one this flake declares"
-              echo "   This is to ensure that python packages and stdenv.cc.cc are from the same Nix pkgs."
-              echo "   The python downloaded from internet may not have been compiled against the same version of glibc or libstdc++so.6(pkgs.stdenv.cc.cc) from Nix pkgs"
-              echo "Create venv with"
-              echo "   uv venv --python \$(which python)"
-              echo
-            '';
-          };
-        });
-    };
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+  };
 }

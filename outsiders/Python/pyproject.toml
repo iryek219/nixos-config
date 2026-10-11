@@ -1,0 +1,31 @@
+[project]
+name = "sandbox"
+version = "0.1.0"
+description = "Python sandbox"
+requires-python = ">=3.12, <3.13"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["uv_build>=0.8,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "sandbox"
+
+[tool.ruff]
+line-length = 100
+#target-version = "py314"  #inferred from requires-python
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.basedpyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "standard"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
