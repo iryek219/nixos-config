@@ -141,7 +141,12 @@
       tmuxPlugins.catppuccin
       {
         plugin = tmuxPlugins.resurrect;
-        extraConfig = "set -g @resurrect-strategy-nvim 'session'";
+        extraConfig = ''
+          set -g @resurrect-strategy-vim 'session'
+          set -g @resurrect-capture-pane-contents 'on'
+          # restore claude with its original arguments (e.g. --resume <id>)
+          set -g @resurrect-processes '"claude->claude *"'
+        '';
       }
       {
         plugin = tmuxPlugins.continuum;
