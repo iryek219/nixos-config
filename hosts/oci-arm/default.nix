@@ -277,6 +277,7 @@ in {
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [22 80 443];
   # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.trustedInterfaces = ["tailscale0"];
 
   # Disable documentation for minimal install.
   documentation.enable = false;
