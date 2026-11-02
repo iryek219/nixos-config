@@ -30,6 +30,18 @@
         UV_PYTHON_DOWNLOADS = "never";
         UV_PYTHON_PREFERENCE = "only-system";
 
+        # Binary wheels (e.g. cadquery-ocp for build123d) dlopen system libs
+        # that NixOS has no global path for. nix-ld does not apply here since
+        # the interpreter is the Nix python, so provide them explicitly.
+        # The first two keep what the system LD_LIBRARY_PATH already had.
+        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [
+          stdenv.cc.cc.lib
+          libglvnd
+          xorg.libX11
+          expat
+          zlib
+        ]);
+
         shellHook = ''
           export UV_PYTHON="$(command -v python3)"
           echo "python $(python3 --version | cut -d' ' -f2) | uv $(uv --version | cut -d' ' -f2) | ruff $(ruff --version | cut -d' ' -f2)"
