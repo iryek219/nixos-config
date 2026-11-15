@@ -9,6 +9,7 @@ if [ $# -lt 1 ]; then
   echo "  h-tuf"
   echo "  h-pc"
   echo "  oci-arm"
+  echo "  n40l"
   echo
   echo "Usage: $0 <host>"
   exit 1

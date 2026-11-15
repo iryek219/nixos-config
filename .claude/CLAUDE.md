@@ -18,6 +18,7 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 │   ├── h-tuf/                   # Primary workstation (x86_64, GUI)
 │   ├── p-wsl/                   # WSL2 environment (x86_64, headless)
 │   ├── oci-arm/                 # Oracle Cloud ARM instance (aarch64, headless)
+│   ├── n40l/                    # HP MicroServer N40L home file server (x86_64, headless, BIOS)
 │   ├── h-fold41/                # Android nix-on-droid (aarch64, no systemd)
 │   ├── h-fold42/                # Android nix-on-droid (aarch64, no systemd)
 │   └── h-pc/                    # (EMPTY - defined in flake.nix but not implemented)
@@ -50,6 +51,7 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 | **h-fold41** | aarch64 | No | No | 24.05 | Samsung Galaxy Fold-4, nix-on-droid |
 | **h-fold42** | aarch64 | No | No | 24.05 | Samsung Galaxy Fold-4, nix-on-droid |
 | **h-pc** | x86_64 | - | - | - | **Planned but not implemented** (in flake.nix only) |
+| **n40l** | x86_64 | No | Yes | 26.11 | HP MicroServer N40L, BIOS/GRUB, disko root, Samba + nightly snapshots |
 
 ### Host Details
 
@@ -78,6 +80,15 @@ This repository contains a multi-host NixOS configuration using **Nix Flakes**. 
 - SSH key authentication only (passwords disabled)
 - Passwordless sudo for admin user
 - Variables in `hosts/oci-arm/vars.nix`
+
+#### n40l (Home file server)
+- HP ProLiant MicroServer N40L, AMD Turion II Neo (x86-64 baseline: no SSSE3/SSE4/AVX; prebuilt AI CLIs excluded in `home/default.nix`), 7.7 GB RAM, legacy BIOS
+- Root disk via disko (`hosts/n40l/disk-config.nix`): GPT + 1 MiB BIOS-boot partition, 8 GB swap, ext4 root; GRUB
+- Data disks mounted by label (`WD8T` -> /srv/wd8t, `WD14T` -> /srv/wd14t) with `nofail`; never listed in disko
+- Samba share `wd8t` (LAN + tailnet only), wsdd, Avahi, Tailscale, smartd, Docker (legacy Gitea/Trac from /srv/wd8t/n40l-home)
+- `snap-wd8t` systemd timer: nightly rsync hardlink snapshots /srv/wd8t -> /srv/wd14t/snap/<date>, keep 14
+- Overrides from common.nix: Incus and NetworkManager off, `sops.secrets` emptied (no age key on the box)
+- Variables in `hosts/n40l/vars.nix`; operating notes in ~/work/n40l on the workstation (N40L-runbook.md)
 
 #### h-fold41 / h-fold42 (Android)
 - nix-on-droid framework
@@ -280,6 +291,7 @@ Setup documentation in `install.txt`:
 - **Secrets Safety**: Cannot edit encrypted files directly; ask user to run `sops secrets/secrets.yaml`
 - **Verification**: Run `nix fmt` (uses alejandra, not nixfmt) after editing .nix files; use `nixos-rebuild dry-build` to verify
 - **h-pc Note**: Defined in flake.nix but not implemented (no hosts/h-pc/ directory exists)
+- **n40l Note**: `hostname != "n40l"` guards in home/default.nix exclude AVX2-only binaries; keep them when adding packages
 - **h-tuf Specifics**:
   - Has OpenClaw integration with Telegram bot (openclaw-gateway service)
   - GLM models available via custom settings file (`~/.claude/settings-glm.json`)

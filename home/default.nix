@@ -45,7 +45,6 @@
       age
       sops
       gemini-cli
-      claude-code
 
       (writeShellScriptBin "doom" "CHEMACS_PROFILE=doom exec ${pkgs.emacs-pgtk}/bin/emacs \"$@\"")
       (writeShellScriptBin "emacs-nox" "CHEMACS_PROFILE=vanilla exec ${pkgs.emacs-pgtk}/bin/emacs -nw \"$@\"")
@@ -60,7 +59,13 @@
       else []
     )
     ++ (
-      if pkgs.system == "x86_64-linux"
+      # Prebuilt AI CLIs need AVX2; the N40L's Turion II Neo (x86-64 baseline) cannot run them.
+      if hostname != "n40l"
+      then [claude-code]
+      else []
+    )
+    ++ (
+      if pkgs.system == "x86_64-linux" && hostname != "n40l"
       then [
         inputs.codex-cli-nix.packages.${pkgs.system}.default
         inputs.opencode-flake.packages.${pkgs.system}.default
