@@ -212,6 +212,14 @@
         hmUser = "hwan";
         modules = [inputs.determinate.nixosModules.default];
       };
+
+      # HP MicroServer N40L home file server (BIOS boot, disko-partitioned root).
+      n40l = mkSystem {
+        hostname = "n40l";
+        system = "x86_64-linux";
+        hmUser = "hwan";
+        modules = [inputs.disko.nixosModules.disko];
+      };
     };
 
     nixOnDroidConfigurations = {
