@@ -618,14 +618,19 @@
         "nixpkgs": "nixpkgs_6"
       },
       "locked": {
-        "lastModified": 1778888945,
-        "narHash": "sha256-MrhA85gpkx9Yf5RgI08GDxs5LBSi7KQ61/Pu+8iu+v0=",
-        "path": "/mnt/data/team-odyssey/infra/nixos/windmill",
-        "type": "path"
+        "dir": "infra/nixos/windmill",
+        "lastModified": 1778889448,
+        "narHash": "sha256-puth6iVpnjLR/Bu3EeoH0jyj1bMLGGpQEElDjnxzjck=",
+        "ref": "refs/heads/main",
+        "rev": "30f6ab66f77433c0e06ce62b5b8b722f09ca9a83",
+        "revCount": 48,
+        "type": "git",
+        "url": "ssh://git@github.com/iryek219/team-odyssey"
       },
       "original": {
-        "path": "/mnt/data/team-odyssey/infra/nixos/windmill",
-        "type": "path"
+        "dir": "infra/nixos/windmill",
+        "type": "git",
+        "url": "ssh://git@github.com/iryek219/team-odyssey"
       }
     }
   },

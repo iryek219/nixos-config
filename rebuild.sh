@@ -18,9 +18,11 @@ fi
 HOST="$1"
 
 echo
-echo "sudo nixos-rebuild switch --flake .#${HOST} --impure"
+echo "nixos-rebuild switch --sudo --flake .#${HOST} --impure"
 echo
 
 export NIXPKGS_ALLOW_INSECURE=1
 
-sudo --preserve-env=NIXPKGS_ALLOW_INSECURE nixos-rebuild switch --flake ".#${HOST}" --impure
+# Evaluate and fetch inputs as the invoking user (whose SSH key can read the
+# private git+ssh inputs, e.g. windmill); only activation runs under sudo.
+nixos-rebuild switch --sudo --flake ".#${HOST}" --impure "${@:2}"
