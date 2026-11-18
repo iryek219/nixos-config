@@ -26,8 +26,10 @@
 
       # Refuse to run unless both disks are really mounted; otherwise the
       # "backup" lands on the root disk.
-      mountpoint -q "''${SRC%/}" && mountpoint -q "$DST" \
-        || { echo "disks not mounted, aborting" >&2; exit 1; }
+      if ! mountpoint -q "''${SRC%/}" || ! mountpoint -q "$DST"; then
+        echo "disks not mounted, aborting" >&2
+        exit 1
+      fi
 
       today=$(date +%F)
       if [ -e "$DST/snap/$today" ]; then
@@ -52,7 +54,9 @@
       ln -sfn "$DST/snap/$today" "$DST/latest"
 
       # prune: lexical order of YYYY-MM-DD is chronological
-      ls -1d "$DST"/snap/????-??-?? | head -n -"$KEEP" | xargs -r rm -rf
+      find "$DST/snap" -mindepth 1 -maxdepth 1 -type d -name '????-??-??' -printf '%f\n' \
+        | sort | head -n -"$KEEP" \
+        | while read -r d; do rm -rf "''${DST:?}/snap/$d"; done
       echo "snapshot $today done (rsync exit $rc)"
     '';
   };
