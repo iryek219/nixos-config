@@ -184,8 +184,8 @@ in {
   };
 
   # --------------------------------------------------------------- samba ---
-  # Same policy as the Debian smb.conf: one share, one user, SMB2+, no
-  # NetBIOS, LAN + tailnet only. After install: `sudo smbpasswd -a hwan`.
+  # Debian smb.conf policy (one user, SMB2+, no NetBIOS, LAN + tailnet
+  # only) plus a read-only wd14t share. After install: `sudo smbpasswd -a hwan`.
   services.samba = {
     enable = true;
     openFirewall = true;
@@ -199,7 +199,9 @@ in {
         "server min protocol" = "SMB2_02";
         "disable netbios" = "yes";
         "smb ports" = "445";
-        "hosts allow" = "127. 192.168.2. 100.64.0.0/10 fd7a:115c:a1e0::/48";
+        # fe80::/10: Windows resolves n40l via mDNS and prefers the IPv6
+        # link-local address, which only exists on the local segment.
+        "hosts allow" = "127. 192.168.2. fe80::/10 100.64.0.0/10 fd7a:115c:a1e0::/48";
         "hosts deny" = "ALL";
         security = "user";
         "map to guest" = "never";
@@ -215,6 +217,18 @@ in {
         "directory mask" = "2775";
         # Keep the boot-disk exports (credentials, DB dumps) off the share
         # (runbook-review.md item 8).
+        "veto files" = "/n40l-home/";
+      };
+      # The snapshots, for browsing and copying files back. Read-only:
+      # unchanged files are hardlinks shared by every snapshot, so an edit
+      # in one would change them all.
+      wd14t = {
+        comment = "WD14T snapshots of wd8t (read-only)";
+        path = vars.snapDst;
+        "valid users" = vars.username;
+        "read only" = "yes";
+        browseable = "yes";
+        # Each snapshot contains a copy of n40l-home; veto matches at any depth.
         "veto files" = "/n40l-home/";
       };
     };
