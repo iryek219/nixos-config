@@ -60,6 +60,51 @@
       echo "snapshot $today done (rsync exit $rc)"
     '';
   };
+
+  # Copy every Docker volume (Gitea, Postgres, pgAdmin, Trac) from the SSD to
+  # dockerBackupDst on WD8T, so the snapshot that follows keeps 14 days of
+  # them on WD14T. Containers using a volume are stopped for the copy (seconds),
+  # so Postgres and Trac's SQLite are copied at rest; the EXIT trap starts them
+  # again however the script ends. Backups of deleted volumes are kept.
+  volBackupScript = pkgs.writeShellApplication {
+    name = "backup-docker-volumes";
+    runtimeInputs = [pkgs.coreutils pkgs.rsync pkgs.util-linux config.virtualisation.docker.package];
+    text = ''
+      DISK=${lib.removeSuffix "/" vars.snapSrc}
+      DST=${vars.dockerBackupDst}
+
+      if ! mountpoint -q "$DISK"; then
+        echo "$DISK not mounted, aborting" >&2
+        exit 1
+      fi
+
+      mapfile -t volumes < <(docker volume ls -q)
+      if [ "''${#volumes[@]}" -eq 0 ]; then
+        echo "no Docker volumes, nothing to do"
+        exit 0
+      fi
+
+      # Running containers that mount any of the volumes.
+      mapfile -t stopped < <(
+        for v in "''${volumes[@]}"; do docker ps -q --filter "volume=$v"; done | sort -u
+      )
+      trap 'if [ "''${#stopped[@]}" -gt 0 ]; then docker start "''${stopped[@]}" >/dev/null; fi' EXIT
+      if [ "''${#stopped[@]}" -gt 0 ]; then
+        # Up to 60 s: Postgres exits only after Gitea has closed its connections.
+        docker stop -t 60 "''${stopped[@]}" >/dev/null
+      fi
+
+      mkdir -p "$DST"
+      chmod 700 "$DST"
+      rc=0
+      for v in "''${volumes[@]}"; do
+        src=$(docker volume inspect -f '{{.Mountpoint}}' "$v")
+        rsync -aHAX --numeric-ids --delete "$src/" "$DST/$v/" || rc=$?
+      done
+      echo "copied ''${#volumes[@]} volumes, ''${#stopped[@]} containers stopped meanwhile (rsync exit $rc)"
+      exit "$rc"
+    '';
+  };
 in {
   imports = [
     ./hardware-configuration.nix
@@ -163,14 +208,21 @@ in {
   };
 
   # ------------------------------------------------------------- network ---
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    # Keep the router (via dhcpcd/openresolv) as this host's DNS. Without
+    # NetworkManager, MagicDNS replaced resolv.conf with 100.100.100.100 but
+    # found no upstream to forward to, so every non-tailnet name failed
+    # (19-20 Nov 2026). The server never needs to resolve tailnet names.
+    extraSetFlags = ["--accept-dns=false"];
+  };
   networking.firewall = {
     enable = true;
     trustedInterfaces = ["tailscale0"];
     allowedUDPPorts = [config.services.tailscale.port];
     # Docker publishes Gitea (8222/8280), adminer (8282), pgadmin (8281) and
-    # Trac (9022/9080) itself, bypassing this firewall; listed for the record.
-    allowedTCPPorts = [8222 8280 8281 8282 9022 9080];
+    # Trac (9080) itself, bypassing this firewall; listed for the record.
+    allowedTCPPorts = [8222 8280 8281 8282 9080];
   };
 
   # mDNS: n40l.local for the LAN.
@@ -242,6 +294,10 @@ in {
   # ----------------------------------------------------- nightly snapshot ---
   systemd.services.snap-wd8t = {
     description = "Nightly hardlink snapshot of ${vars.snapSrc} onto ${vars.snapDst}";
+    # Copy the Docker volumes onto WD8T first, so this snapshot includes them.
+    # Wants, not Requires: a failed volume copy must not cancel the snapshot.
+    wants = ["backup-docker-volumes.service"];
+    after = ["backup-docker-volumes.service"];
     unitConfig.RequiresMountsFor = [vars.snapSrc vars.snapDst];
     serviceConfig = {
       Type = "oneshot";
@@ -256,6 +312,20 @@ in {
     timerConfig = {
       OnCalendar = "*-*-* 03:30:00";
       Persistent = true; # catch up if the box was off at 03:30
+    };
+  };
+  # No timer of its own: snap-wd8t pulls it in at 03:30.
+  # By hand: sudo systemctl start backup-docker-volumes
+  systemd.services.backup-docker-volumes = {
+    description = "Copy every Docker volume to ${vars.dockerBackupDst}";
+    after = ["docker.service"];
+    unitConfig.RequiresMountsFor = [vars.snapSrc];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = lib.getExe volBackupScript;
+      Nice = 10;
+      IOSchedulingClass = "best-effort";
+      IOSchedulingPriority = 7;
     };
   };
 
@@ -274,5 +344,6 @@ in {
     ethtool
     cifs-utils
     snapScript
+    volBackupScript
   ];
 }

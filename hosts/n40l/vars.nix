@@ -20,4 +20,8 @@
   snapSrc = "/srv/wd8t/";
   snapDst = "/srv/wd14t";
   snapKeep = 14;
+
+  # Nightly copy of the Docker volumes (on the SSD) onto WD8T, just before the
+  # snapshot. Under n40l-home, so Samba vetoes it: it holds password hashes.
+  dockerBackupDst = "/srv/wd8t/n40l-home/docker-volumes";
 }
